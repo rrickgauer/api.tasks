@@ -66,11 +66,15 @@ class DB
         $sql->execute();
         $resultSet = $sql->fetch(PDO::FETCH_ASSOC);
 
+        if (!isset($resultSet['password'])) {
+            return -1;
+        }
+
         // check if the password matches the one in the database
         $hashedPassword = $resultSet['password'];
 
         if (!password_verify($password, $hashedPassword)) {
-            return false;
+            return -1;
         } else {
             return $resultSet['id'];
         }

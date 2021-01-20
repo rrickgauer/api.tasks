@@ -9,12 +9,20 @@ require_once('Common-Functions.php');
 require_once('DB.php');
 require_once('Parser.php');
 require_once('Constants.php');
+require_once('Return-Codes.php');
 require_once('User.php');
+
+
+// Common::printJson($_GET);
+
 
 // setup the parser
 $parser = new Parser();
 $module = $parser->getModule();
 $requestMethod = strtoupper($parser->getRequestMethod());
+
+$ReturnCodes = new ReturnCodes();
+
 
 
 /**
@@ -24,14 +32,25 @@ if ($module == Constants::Modules['Users']) {
 
     // create a new user
     if ($requestMethod == Constants::RequestMethods['POST']) {
+        $userID = DB::getUserId($_POST['email'], $_POST['password']);
+
+        // email already exists
+        if ($userID != -1) {
+            http_response_code(400);
+            Common::printJson($ReturnCodes->EmailExists);    
+            exit;
+        }
+
+
         // insert the user into the database
         $insertResult = DB::insertUser($_POST['email'], $_POST['password']);
 
         // error creating a new user
         if ($insertResult->rowCount() != 1) {
-            Common::returnRequestNotFound('Email already exists.');
+            http_response_code(400);
+            Common::printJson($ReturnCodes->ErrorInsertNewUser);    
             exit;
-        }
+        }   
 
         // get the new user's id
         $userID = DB::getUserId($_POST['email'], $_POST['password']);
@@ -42,12 +61,21 @@ if ($module == Constants::Modules['Users']) {
         // return the user's data
         http_response_code(201);
         Common::printJson($user->getUserDataJson());
+        exit;
     }
 
     // Return a user's data
-    if ($requestMethod == Constants::RequestMethods['GET']) {
-        // create a new user by getting the user's id from the header
-        $user = new User($parser->getUserId());
+    else if ($requestMethod == Constants::RequestMethods['GET']) {
+        
+        if (isset($_GET['email'], $_GET['password'])) {
+            $userID = DB::getUserId($_GET['email'], $_GET['password']);
+
+            $user = new User($userID);
+        } else {
+            // get the user's info from the id passed in
+            $user = new User($parser->getUserId());            
+        }
+        
 
         // print the data
         http_response_code(200);
