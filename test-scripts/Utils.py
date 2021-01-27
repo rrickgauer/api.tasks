@@ -4,7 +4,8 @@ class Utils:
 
     api_urls = {
         "base": "http://localhost/files/api.tasks/src/main.php",
-        "users": "http://localhost/files/api.tasks/src/main.php/users"
+        "users": "http://localhost/files/api.tasks/src/main.php/users",
+        "events": "http://localhost/files/api.tasks/src/main.php/events",
     }
 
 

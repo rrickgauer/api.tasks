@@ -11,9 +11,7 @@ require_once('Parser.php');
 require_once('Constants.php');
 require_once('Return-Codes.php');
 require_once('User.php');
-
-
-// Common::printJson($_GET);
+require_once('Event.php');
 
 
 // setup the parser
@@ -22,7 +20,6 @@ $module = $parser->getModule();
 $requestMethod = strtoupper($parser->getRequestMethod());
 
 $ReturnCodes = new ReturnCodes();
-
 
 
 /**
@@ -37,7 +34,7 @@ if ($module == Constants::Modules['Users']) {
         // email already exists
         if ($userID != -1) {
             http_response_code(400);
-            Common::printJson($ReturnCodes->EmailExists);    
+            Common::printJson($ReturnCodes->Info_EmailExists);    
             exit;
         }
 
@@ -48,7 +45,7 @@ if ($module == Constants::Modules['Users']) {
         // error creating a new user
         if ($insertResult->rowCount() != 1) {
             http_response_code(400);
-            Common::printJson($ReturnCodes->ErrorInsertNewUser);    
+            Common::printJson($ReturnCodes->Error_InsertNewUser);    
             exit;
         }   
 
@@ -83,6 +80,37 @@ if ($module == Constants::Modules['Users']) {
 
     }
 }
+
+/**
+ * Events section. 
+ */
+else if ($module == Constants::Modules['Events']) {
+    $userID = $parser->getUserId();
+
+    // create a new event
+    if ($requestMethod == Constants::RequestMethods['POST']) {
+        $newEventData = Common::getNewEventRequestData();
+        $newEvent = new EventStruct($newEventData);
+    
+        $dbResult = DB::insertEvent($userID, $newEvent);
+
+        // if the row count is 1, success
+        // otherwise error
+        if ($dbResult->rowCount() == 1) {
+            Common::returnSuccessfulCreation();
+            exit;
+        } else {
+            Common::printJson($ReturnCodes->Error_InsertNewEvent);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        }
+
+    }
+}
+
+
+
+
 
 
 
