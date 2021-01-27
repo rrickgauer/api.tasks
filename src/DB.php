@@ -5,6 +5,8 @@
  This class is responsible for communicating with the database.
 ***********************************************************************/
 
+require_once('Event.php');
+
 class DB 
 {
     /**
@@ -106,6 +108,114 @@ class DB
 
         return $sql;
     }
+
+
+    /**
+     * Insert a new event
+     *  
+     * id
+     * user_id
+     * name
+     * link
+     * description
+     * phone_number
+     * location_address_1
+     * location_address_2
+     * location_city
+     * location_state
+     * location_zip
+     * starts_on
+     * ends_on
+     * starts_at
+     * ends_at
+     * frequency
+     * seperation
+     * count
+     * until
+     */
+    public static function insertEvent($user_id, $eventStruct) {
+        $stmt = 'INSERT INTO Events (
+            id, user_id, name, description, phone_number, 
+            location_address_1, location_address_2, location_city, location_state, location_zip, 
+            starts_on, ends_on, starts_at, ends_at, 
+            frequency, seperation, count, until
+        )
+
+        VALUES (
+            :id, :user_id, :name, :description, :phone_number, 
+            :location_address_1, :location_address_2, :location_city, :location_state, :location_zip, 
+            :starts_on, :ends_on, :starts_at, :ends_at, 
+            :frequency, :seperation, :count, :until
+        )';
+
+
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        // userID and event name cannot be null, so sanitize them
+        $user_id = filter_var($user_id, FILTER_SANITIZE_STRING);
+        $eventStruct->name = filter_var($eventStruct->name, FILTER_SANITIZE_STRING);
+        
+        // filter out the event fields if they aren't not null
+        if (!is_null($eventStruct->id)) 
+            $eventStruct->id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->description)) 
+            $eventStruct->description = filter_var($eventStruct->description, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->phone_number)) 
+            $eventStruct->phone_number = filter_var($eventStruct->phone_number, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->location_address_1)) 
+            $eventStruct->location_address_1 = filter_var($eventStruct->location_address_1, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->location_address_2)) 
+            $eventStruct->location_address_2 = filter_var($eventStruct->location_address_2, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->location_city)) 
+            $eventStruct->location_city = filter_var($eventStruct->location_city, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->location_state)) 
+            $eventStruct->location_state = filter_var($eventStruct->location_state, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->location_zip)) 
+            $eventStruct->location_zip = filter_var($eventStruct->location_zip, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->starts_on)) 
+            $eventStruct->starts_on = filter_var($eventStruct->starts_on, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->ends_on)) 
+            $eventStruct->ends_on = filter_var($eventStruct->ends_on, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->starts_at)) 
+            $eventStruct->starts_at = filter_var($eventStruct->starts_at, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->ends_at)) 
+            $eventStruct->ends_at = filter_var($eventStruct->ends_at, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->frequency)) 
+            $eventStruct->frequency = filter_var($eventStruct->frequency, FILTER_SANITIZE_STRING);
+        if (!is_null($eventStruct->seperation)) 
+            $eventStruct->seperation = filter_var($eventStruct->seperation, FILTER_SANITIZE_NUMBER_INT);
+        if (!is_null($eventStruct->count)) 
+            $eventStruct->count = filter_var($eventStruct->count, FILTER_SANITIZE_NUMBER_INT);
+        if (!is_null($eventStruct->until)) 
+            $eventStruct->until = filter_var($eventStruct->until, FILTER_SANITIZE_STRING);
+
+        
+        // bind the parms 
+        $sql->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+        $sql->bindParam(':id', $eventStruct->id, PDO::PARAM_STR);
+        $sql->bindParam(':name', $eventStruct->name, PDO::PARAM_STR);
+        $sql->bindParam(':description', $eventStruct->description, PDO::PARAM_STR);
+        $sql->bindParam(':phone_number', $eventStruct->phone_number, PDO::PARAM_STR);
+        $sql->bindParam(':location_address_1', $eventStruct->location_address_1, PDO::PARAM_STR);
+        $sql->bindParam(':location_address_2', $eventStruct->location_address_2, PDO::PARAM_STR);
+        $sql->bindParam(':location_city', $eventStruct->location_city, PDO::PARAM_STR);
+        $sql->bindParam(':location_state', $eventStruct->location_state, PDO::PARAM_STR);
+        $sql->bindParam(':location_zip', $eventStruct->location_zip, PDO::PARAM_STR);
+        $sql->bindParam(':starts_on', $eventStruct->starts_on, PDO::PARAM_STR);
+        $sql->bindParam(':ends_on', $eventStruct->ends_on, PDO::PARAM_STR);
+        $sql->bindParam(':starts_at', $eventStruct->starts_at, PDO::PARAM_STR);
+        $sql->bindParam(':ends_at', $eventStruct->ends_at, PDO::PARAM_STR);
+        $sql->bindParam(':frequency', $eventStruct->frequency, PDO::PARAM_STR);
+        $sql->bindParam(':seperation', $eventStruct->seperation, PDO::PARAM_INT);
+        $sql->bindParam(':count', $eventStruct->count, PDO::PARAM_INT);
+        $sql->bindParam(':until', $eventStruct->until, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        return $sql;
+    }
+
 
 }
 
