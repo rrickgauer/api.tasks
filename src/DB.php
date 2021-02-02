@@ -1,12 +1,12 @@
 <?php
+
+require_once('Event.php');
+
 /************************************************************************
  DB.php
 
  This class is responsible for communicating with the database.
 ***********************************************************************/
-
-require_once('Event.php');
-
 class DB 
 {
     /**
@@ -215,6 +215,31 @@ class DB
 
         return $sql;
     }
+
+    /**
+     * Returs all events belonging to a user within a range of dates.
+     * 
+     * Calls the SQL procedure Get_Events().
+     */
+    public static function getEvents($userID, $startsOn, $endsOn) {
+        $stmt = 'CALL Get_Events(:userID, :startsOn, :endsOn)';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+        
+        $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':userID', $userID, PDO::PARAM_STR);
+
+        $startsOn = filter_var($startsOn, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':startsOn', $startsOn, PDO::PARAM_STR);
+
+        $endsOn = filter_var($endsOn, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':endsOn', $endsOn, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        return $sql;
+    }
+
 
 
 }

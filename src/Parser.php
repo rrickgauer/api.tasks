@@ -45,7 +45,7 @@ class Parser
      * 
      * Should always be the first element in the request array.
      */
-    private function setModule() {
+    protected function setModule() {
         $module = $this->request[0];
 
         // make sure it's a valid module
@@ -90,7 +90,7 @@ class Parser
     /**
      * Set the user id from the X-USER-ID request header field.
      */
-    private function setUserId() {
+    protected function setUserId() {
         $userID = null;
 
         if (isset($_SERVER['HTTP_X_USER_ID'])) {
@@ -110,16 +110,75 @@ class Parser
 
 
 
+/************************************************************************
+ParserEvents
 
+This is a parser used for the events module. It is a child of the 
+Parser class.
 
+In addition to its parent methods, it also parses the start date and 
+end dates.
+***********************************************************************/
+class ParserEvents extends Parser {
 
+    protected $dateStart;
+    protected $dateEnd;
 
+    public function __construct() {
+        parent::__construct();
 
+        $this->setDateStart();
+        $this->setDateEnd();
 
+    }
 
+    /**
+     * Sets the date start.
+     * 
+     * Is passed in through the get request parm
+     */
+    protected function setDateStart() {
+        $dateStart = null;
 
+        // if the parm is not set dont worry about it
+        if (isset($_GET['starts_on'])) {
+            $dateStart = $_GET['starts_on'];
+        }
 
+        $this->dateStart = $dateStart;
+    }
 
+    /**
+     * Sets the date end.
+     * 
+     * Is passed in through the get request parm
+     */
+    protected function setDateEnd() {
+        $dateEnd = null;
+
+        // if the parm is not set dont worry about it
+        if (isset($_GET['ends_on'])) {
+            $dateEnd = $_GET['ends_on'];
+        }
+
+        $this->dateEnd = $dateEnd;
+    }
+
+    /**
+     * Returns the date start field
+     */
+    public function getDateStart() {
+        return $this->dateStart;
+    }
+
+    /**
+     * Returns the date end field
+     */
+    public function getDateEnd() {
+        return $this->dateEnd;
+    }
+
+}
 
 
 

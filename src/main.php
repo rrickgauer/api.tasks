@@ -89,6 +89,7 @@ else if ($module == Constants::Modules['Events']) {
 
     // create a new event
     if ($requestMethod == Constants::RequestMethods['POST']) {
+
         $newEventData = Common::getNewEventRequestData();
         $newEvent = new EventStruct($newEventData);
     
@@ -104,12 +105,23 @@ else if ($module == Constants::Modules['Events']) {
             Common::returnUnsuccessfulCreation();
             exit;
         }
+    }
 
+    // get events with in a range of dates
+    else if ($requestMethod == Constants::RequestMethods['GET']) {
+        // create an events parser so we can get the start and end date
+        $eventParser = new ParserEvents();
+
+        // get the events from the database
+        $events = DB::getEvents($eventParser->getUserId(), $eventParser->getDateStart(), $eventParser->getDateEnd())->fetchAll(PDO::FETCH_ASSOC);
+
+        // return the results
+        Common::printJson($events);
+        http_response_code(200);
+
+        exit;
     }
 }
-
-
-
 
 
 
