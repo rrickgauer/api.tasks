@@ -1,4 +1,4 @@
 db-info.php
-tables/
+.tables/
 test-scripts/.test-account-info.json
 __pycache__/
