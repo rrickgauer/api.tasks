@@ -14,6 +14,7 @@ headers = {
 
 parms = {
     "id": uuid.uuid1(),
+    "name": "from python",
 }
 
 r = requests.post(Utils.api_urls["events"], headers=headers, data=parms)
