@@ -1,5 +1,6 @@
 DELIMITER $$
 CREATE PROCEDURE `Get_Events`(
+	IN user_id CHAR(36),
     IN range_start DATE,
     IN range_end DATE
 )
@@ -15,7 +16,9 @@ BEGIN
     
     -- cursor for fetching all the event ids
 	DECLARE cursor_events CURSOR 
-    FOR SELECT id FROM Events;
+    FOR SELECT e.id 
+    FROM Events e 
+    WHERE e.user_id = user_id;
     
 	-- declare NOT FOUND handler
 	DECLARE CONTINUE HANDLER 
