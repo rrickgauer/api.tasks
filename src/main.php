@@ -95,16 +95,24 @@ else if ($module == Constants::Modules['Events']) {
     
         $dbResult = DB::insertEvent($userID, $newEvent);
 
-        // if the row count is 1, success
-        // otherwise error
-        if ($dbResult->rowCount() == 1) {
-            Common::returnSuccessfulCreation();
-            exit;
-        } else {
+        if ($dbResult->rowCount() != 1) {
             Common::printJson($ReturnCodes->Error_InsertNewEvent);
             Common::returnUnsuccessfulCreation();
             exit;
         }
+
+        $dbResult = DB::insertEventRecurrence($newEvent);
+
+        echo $dbResult->rowCount();
+
+        if ($dbResult->rowCount() != 1) {
+            Common::printJson($ReturnCodes->Error_InsertNewEvent);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        }
+
+        Common::returnSuccessfulCreation();
+        exit;
     }
 
     // get events with in a range of dates

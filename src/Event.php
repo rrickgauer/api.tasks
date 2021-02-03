@@ -18,6 +18,10 @@ class EventStruct {
     public $seperation;
     public $count;
     public $until;
+    public $recurrence_id;
+    public $recurrence_day;
+    public $recurrence_week;
+    public $recurrence_month;
 
     public function __construct($inDataArray) {
         $this->id                 = $inDataArray['id'];
@@ -37,6 +41,11 @@ class EventStruct {
         $this->seperation         = $inDataArray['seperation'];
         $this->count              = $inDataArray['count'];
         $this->until              = $inDataArray['until'];
+        $this->recurrence_id      = $inDataArray['recurrence_id'];
+        $this->recurrence_day     = $inDataArray['recurrence_day'];
+        $this->recurrence_week    = $inDataArray['recurrence_week'];
+        $this->recurrence_month   = $inDataArray['recurrence_month'];
+
     }
 
 
