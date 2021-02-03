@@ -41,6 +41,10 @@ class Constants
         "seperation",
         "count",
         "until",
+        "recurrence_id",
+        "recurrence_day",
+        "recurrence_week",
+        "recurrence_month",
     ];
 
 

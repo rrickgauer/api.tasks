@@ -216,6 +216,45 @@ class DB
         return $sql;
     }
 
+    public static function insertEventRecurrence(EventStruct $eventStruct) {
+
+        $stmt = 'INSERT INTO Event_Recurrences (id, event_id, day, week, month) 
+        VALUES (:recurrence_id, :event_id, :day, :week, :month)';
+        
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        // recurrence and event ids cannot be null, so sanitize them
+        $event_id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
+        $recurrence_id = filter_var($eventStruct->recurrence_id, FILTER_SANITIZE_STRING);
+        
+        $day = $eventStruct->recurrence_day;
+        if ($day != null) {
+            $day = filter_var($day, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $week = $eventStruct->recurrence_week;
+        if ($week != null) {
+            $week = filter_var($week, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $month = $eventStruct->recurrence_month;
+        if ($month != null) {
+            $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        // bind the parms
+        $sql->bindParam(':recurrence_id', $recurrence_id, PDO::PARAM_STR);
+        $sql->bindParam(':event_id', $event_id, PDO::PARAM_STR);
+        $sql->bindParam(':day', $day, PDO::PARAM_INT);
+        $sql->bindParam(':week', $week, PDO::PARAM_INT);
+        $sql->bindParam(':month', $month, PDO::PARAM_INT);
+
+
+        $sql->execute();
+        return $sql;
+
+    }
+
     /**
      * Returs all events belonging to a user within a range of dates.
      * 

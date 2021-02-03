@@ -85,6 +85,10 @@ class Common
      * seperation
      * count
      * until
+     * recurrence_id
+     * recurrence_day
+     * recurrence_week
+     * recurrence_month
      */
     public static function getNewEventRequestData() {
         $newEventData = [];
