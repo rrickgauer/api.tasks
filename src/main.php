@@ -92,7 +92,7 @@ else if ($module == Constants::Modules['Events']) {
 
         $newEventData = Common::getNewEventRequestData();
         $newEvent = new EventStruct($newEventData);
-    
+
         $dbResult = DB::insertEvent($userID, $newEvent);
 
         if ($dbResult->rowCount() != 1) {
@@ -102,8 +102,6 @@ else if ($module == Constants::Modules['Events']) {
         }
 
         $dbResult = DB::insertEventRecurrence($newEvent);
-
-        echo $dbResult->rowCount();
 
         if ($dbResult->rowCount() != 1) {
             Common::printJson($ReturnCodes->Error_InsertNewEvent);

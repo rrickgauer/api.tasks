@@ -150,6 +150,7 @@ class DB
 
 
 
+
         $sql = DB::dbConnect()->prepare($stmt);
 
         // userID and event name cannot be null, so sanitize them
@@ -157,37 +158,37 @@ class DB
         $eventStruct->name = filter_var($eventStruct->name, FILTER_SANITIZE_STRING);
         
         // filter out the event fields if they aren't not null
-        if (!is_null($eventStruct->id)) 
+        if ($eventStruct->id != null) 
             $eventStruct->id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->description)) 
+        if ($eventStruct->description != null) 
             $eventStruct->description = filter_var($eventStruct->description, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->phone_number)) 
+        if ($eventStruct->phone_number != null) 
             $eventStruct->phone_number = filter_var($eventStruct->phone_number, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->location_address_1)) 
+        if ($eventStruct->location_address_1 != null) 
             $eventStruct->location_address_1 = filter_var($eventStruct->location_address_1, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->location_address_2)) 
+        if ($eventStruct->location_address_2 != null) 
             $eventStruct->location_address_2 = filter_var($eventStruct->location_address_2, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->location_city)) 
+        if ($eventStruct->location_city != null) 
             $eventStruct->location_city = filter_var($eventStruct->location_city, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->location_state)) 
+        if ($eventStruct->location_state != null) 
             $eventStruct->location_state = filter_var($eventStruct->location_state, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->location_zip)) 
+        if ($eventStruct->location_zip != null) 
             $eventStruct->location_zip = filter_var($eventStruct->location_zip, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->starts_on)) 
+        if ($eventStruct->starts_on != null) 
             $eventStruct->starts_on = filter_var($eventStruct->starts_on, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->ends_on)) 
+        if ($eventStruct->ends_on != null) 
             $eventStruct->ends_on = filter_var($eventStruct->ends_on, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->starts_at)) 
+        if ($eventStruct->starts_at != null) 
             $eventStruct->starts_at = filter_var($eventStruct->starts_at, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->ends_at)) 
+        if ($eventStruct->ends_at != null) 
             $eventStruct->ends_at = filter_var($eventStruct->ends_at, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->frequency)) 
+        if ($eventStruct->frequency != null) 
             $eventStruct->frequency = filter_var($eventStruct->frequency, FILTER_SANITIZE_STRING);
-        if (!is_null($eventStruct->seperation)) 
+        if ($eventStruct->seperation != null) 
             $eventStruct->seperation = filter_var($eventStruct->seperation, FILTER_SANITIZE_NUMBER_INT);
-        if (!is_null($eventStruct->count)) 
+        if ($eventStruct->count != null) 
             $eventStruct->count = filter_var($eventStruct->count, FILTER_SANITIZE_NUMBER_INT);
-        if (!is_null($eventStruct->until)) 
+        if ($eventStruct->until != null) 
             $eventStruct->until = filter_var($eventStruct->until, FILTER_SANITIZE_STRING);
 
         
