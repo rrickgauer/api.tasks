@@ -1,18 +1,16 @@
 <?php
 
-/************************************************************************
- Parser.php
-
- This class is responsible for parsing the request url and header fields.
-***********************************************************************/
-
 require_once('Common-Functions.php');
 require_once('DB.php');
 require_once('Parser.php');
 require_once('Constants.php');
 require_once('Return-Codes.php');
 
+/************************************************************************
+ Parser.php
 
+ This class is responsible for parsing the request url and header fields.
+***********************************************************************/
 class Parser
 {
     protected $request;
@@ -21,9 +19,9 @@ class Parser
     protected $userID;
 
 
-    /**
-     * Constructor.
-     */
+    /********************************************************
+    Default constructor.
+    *********************************************************/
     public function __construct() {
         // Ensure a module is specified
         if (!isset($_SERVER['PATH_INFO'])) {
@@ -40,11 +38,12 @@ class Parser
     }
 
 
-    /**
-     * Set the module.
-     * 
-     * Should always be the first element in the request array.
-     */
+
+    /********************************************************
+    Set the module.
+    
+    Should always be the first element in the request array.
+    *********************************************************/
     protected function setModule() {
         $module = $this->request[0];
 
@@ -57,16 +56,18 @@ class Parser
         $this->module = $module;
     }
 
-    /**
-     * Return the module
-     */
+
+    /********************************************************
+    Returns the module
+    *********************************************************/
     public function getModule() {
         return $this->module;
     }
 
-    /**
-     * Set the request method (get, post, delete, put, etc...).
-     */
+
+    /********************************************************
+    Set the request method (get, post, delete, put, etc...).
+    *********************************************************/
     public function setRequestMethod() {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -79,17 +80,18 @@ class Parser
 
         $this->requestMethod = $requestMethod;
     }
-
-    /**
-     * Return the request method.
-     */
+     
+    /********************************************************
+    Return the request method.
+    *********************************************************/
     public function getRequestMethod() {
         return $this->requestMethod;
     }
 
-    /**
-     * Set the user id from the X-USER-ID request header field.
-     */
+
+    /********************************************************
+    Set the user id from the X-USER-ID request header field.
+    *********************************************************/
     protected function setUserId() {
         $userID = null;
 
@@ -100,9 +102,10 @@ class Parser
         $this->userID = $userID;
     }
 
-    /**
-     * Returns the user id from the header field.
-     */
+
+    /********************************************************
+    Returns the user id from the header field.
+    *********************************************************/
     public function getUserId() {
         return $this->userID;
     }
@@ -111,7 +114,7 @@ class Parser
 
 
 /************************************************************************
-ParserEvents
+ParserRecurrences
 
 This is a parser used for the events module. It is a child of the 
 Parser class.
@@ -119,11 +122,14 @@ Parser class.
 In addition to its parent methods, it also parses the start date and 
 end dates.
 ***********************************************************************/
-class ParserEvents extends Parser {
-
+class ParserRecurrences extends Parser 
+{
     protected $dateStart;
     protected $dateEnd;
 
+    /********************************************************
+    Default constructor.
+    *********************************************************/
     public function __construct() {
         parent::__construct();
 
@@ -132,11 +138,11 @@ class ParserEvents extends Parser {
 
     }
 
-    /**
-     * Sets the date start.
-     * 
-     * Is passed in through the get request parm
-     */
+    /********************************************************
+    Sets the date start.
+    
+    Is passed in through the get request parm
+    *********************************************************/
     protected function setDateStart() {
         $dateStart = null;
 
@@ -148,11 +154,11 @@ class ParserEvents extends Parser {
         $this->dateStart = $dateStart;
     }
 
-    /**
-     * Sets the date end.
-     * 
-     * Is passed in through the get request parm
-     */
+    /********************************************************
+    Sets the date end.
+    
+    Is passed in through the get request parm
+    *********************************************************/
     protected function setDateEnd() {
         $dateEnd = null;
 
@@ -164,21 +170,77 @@ class ParserEvents extends Parser {
         $this->dateEnd = $dateEnd;
     }
 
-    /**
-     * Returns the date start field
-     */
+
+    /********************************************************
+    Returns the date start field
+    *********************************************************/
     public function getDateStart() {
         return $this->dateStart;
     }
 
-    /**
-     * Returns the date end field
-     */
+
+    /********************************************************
+    Returns the date end field
+    *********************************************************/
     public function getDateEnd() {
         return $this->dateEnd;
     }
 
 }
+
+
+
+/************************************************************************
+ParserEvents
+
+This class is responsible for parsing request data for Events
+***********************************************************************/
+class ParserEvents extends Parser {
+
+    /********************************************************
+    Default constructor
+    *********************************************************/
+    public function __construct() {
+        parent::__construct();
+    }
+
+
+    /********************************************************
+    Returns an array with all of the event data sent to the api.
+    *********************************************************/
+    public function getNewEventRequestData() {
+        $newEventData = [];
+        $eventKeys = array_values(Constants::EventProperties);  // event fields 
+
+        /**
+         * loop through the event fields constant to check and see if the key is in the post request data
+         * if it is, add it to the array
+         * otherwise, set it to null
+         */
+        for ($count = 0; $count < count($eventKeys); $count++) {
+            $key = $eventKeys[$count];
+
+            if (isset($_POST[$key]) && $_POST[$key] != "") {
+                $newEventData[$key] = $_POST[$key];
+            } else {
+                $newEventData[$key] = null;
+            }
+
+        }
+
+        return $newEventData;
+    }
+
+
+
+
+
+}
+
+
+
+
+
 
 
 

@@ -10,16 +10,20 @@ class Constants
 {
     // types of request methods
     const RequestMethods = [
-        "PUT" => "PUT",
-        "POST" => "POST",
-        "GET" => "GET",
+        "PUT"    => "PUT",
+        "POST"   => "POST",
+        "GET"    => "GET",
         "DELETE" => "DELETE",
     ];
 
     // acceptable modules
     const Modules = [
-        "Users" => "users",
-        "Events" => "events",
+        "Users"         => "users",
+        "Events"        => "events",
+        "Recurrences"   => "recurrences",
+        "Cancellations" => "cancellations",
+        "Completetions" => "completetions",
+        "Notes"         => "notes",
     ];
 
     // properties for an event

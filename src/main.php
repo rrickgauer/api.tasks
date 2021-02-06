@@ -1,5 +1,4 @@
 <?php
-
 /************************************************************************
 
 This is the main project file.
@@ -11,7 +10,7 @@ require_once('Parser.php');
 require_once('Constants.php');
 require_once('Return-Codes.php');
 require_once('User.php');
-require_once('Event.php');
+require_once('Events.php');
 
 
 // setup the parser
@@ -22,12 +21,15 @@ $requestMethod = strtoupper($parser->getRequestMethod());
 $ReturnCodes = new ReturnCodes();
 
 
-/**
- * Users section.
- */
+
+/***************************************************************************
+Users section.
+****************************************************************************/
 if ($module == Constants::Modules['Users']) {
 
-    // create a new user
+    /**
+     * Create a new user
+     */
     if ($requestMethod == Constants::RequestMethods['POST']) {
         $userID = DB::getUserId($_POST['email'], $_POST['password']);
 
@@ -61,7 +63,9 @@ if ($module == Constants::Modules['Users']) {
         exit;
     }
 
-    // Return a user's data
+    /**
+     * Return a user's data
+     */
     else if ($requestMethod == Constants::RequestMethods['GET']) {
         
         if (isset($_GET['email'], $_GET['password'])) {
@@ -81,16 +85,21 @@ if ($module == Constants::Modules['Users']) {
     }
 }
 
-/**
- * Events section. 
- */
+
+/***************************************************************************
+Events section.
+****************************************************************************/
 else if ($module == Constants::Modules['Events']) {
     $userID = $parser->getUserId();
 
-    // create a new event
+    /**
+     * Create a new event
+     */
     if ($requestMethod == Constants::RequestMethods['POST']) {
+        $eventParser = new ParserEvents();
 
-        $newEventData = Common::getNewEventRequestData();
+        // $newEventData = Common::getNewEventRequestData();
+        $newEventData = $eventParser->getNewEventRequestData();
         $newEvent = new EventStruct($newEventData);
 
         $dbResult = DB::insertEvent($userID, $newEvent);
@@ -113,23 +122,37 @@ else if ($module == Constants::Modules['Events']) {
         exit;
     }
 
-    // get events with in a range of dates
+    /**
+     * Get the events for a user
+     * Meta data
+     */
     else if ($requestMethod == Constants::RequestMethods['GET']) {
-        // create an events parser so we can get the start and end date
-        $eventParser = new ParserEvents();
+        $events = new Events($parser->getUserId());
 
-        // get the events from the database
-        $events = DB::getEvents($eventParser->getUserId(), $eventParser->getDateStart(), $eventParser->getDateEnd())->fetchAll(PDO::FETCH_ASSOC);
-
-        // return the results
-        Common::printJson($events);
-        http_response_code(200);
+        Common::printJson($events->getEvents());
+        Common::returnSuccessfulGet();
 
         exit;
     }
 }
 
+/***************************************************************************
+Recurrences section.
+****************************************************************************/
+else if ($module == Constants::Modules['Recurrences']) {
+    /**
+     * Get the event recurrences between a set of dates
+     */
+    if ($requestMethod == Constants::RequestMethods['GET']) {
+        $recurrenceParser = new ParserRecurrences();
+        $recurrences = new Recurrences($recurrenceParser->getUserId(), $recurrenceParser->getDateStart(), $recurrenceParser->getDateEnd());
 
+        Common::printJson($recurrences->getRecurrences());
+        Common::returnSuccessfulGet();
+
+        exit;
+    }
+}
 
 
 exit;

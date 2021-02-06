@@ -6,6 +6,7 @@ class Utils:
         "base": "http://localhost/files/api.tasks/src/main.php",
         "users": "http://localhost/files/api.tasks/src/main.php/users",
         "events": "http://localhost/files/api.tasks/src/main.php/events",
+        "recurrences": "http://localhost/files/api.tasks/src/main.php/recurrences",
     }
 
 

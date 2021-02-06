@@ -115,10 +115,20 @@ SP: BEGIN
 			e.location_address_2 AS location_address_2,
 			e.location_city AS location_city,
 			e.location_state AS location_state,
-			e.location_zip AS location_zip
+			e.location_zip AS location_zip,
+			e.starts_on AS starts_on,
+			e.ends_on AS ends_on,
+			e.frequency AS frequency,
+			e.seperation AS seperation,
+			e.created_on AS created_on,
+			er.id AS recurrence_id,
+			er.day AS recurrence_day,
+			er.week AS recurrence_week,
+			er.month AS recurrence_month
 		FROM
 			Temp_Event_Occurrence_Dates teod
 			LEFT JOIN Events e ON teod.event_id = e.id
+			LEFT JOIN Event_Recurrences er ON teod.event_id = er.event_id
 		ORDER BY occurs_on ASC;
     
 		DROP TABLE Temp_Event_Occurrence_Dates;

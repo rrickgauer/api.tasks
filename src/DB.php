@@ -1,17 +1,17 @@
 <?php
 
-require_once('Event.php');
+require_once('Events.php');
 
 /************************************************************************
- DB.php
+DB.php
 
- This class is responsible for communicating with the database.
+This class is responsible for communicating with the database.
 ***********************************************************************/
 class DB 
 {
-    /**
-     * Return a pdo database object
-     */
+    /********************************************************
+    Return a pdo database object
+    *********************************************************/
     public static function dbConnect() {
         include('db-info.php');
         
@@ -27,9 +27,10 @@ class DB
         }
     }
 
-    /**
-     * Insert a new user into the database
-     */
+
+    /********************************************************
+    Insert a new user into the database
+    *********************************************************/
     public static function insertUser(string $email, string $password) {
         $stmt = 'INSERT INTO Users 
         (id, email, password, created_on) VALUES 
@@ -51,12 +52,14 @@ class DB
         return $sql;
     }
 
-    /**
-     * Get a user's password by checking the email and password combination.
-     * 
-     * Returns false if the password passed in does not match the password
-     * retrieved from the database that matches the email passed in.
-     */
+
+
+    /********************************************************
+    Get a user's password by checking the email and password combination.
+    
+    Returns false if the password passed in does not match the password
+    retrieved from the database that matches the email passed in.
+    *********************************************************/
     public static function getUserId(string $email, string $password) {
         $stmt = 'SELECT u.id, u.password FROM Users u WHERE u.email = :email LIMIT 1';
 
@@ -82,14 +85,13 @@ class DB
         }
     }
 
-
-    /**
-     * Retrieve user info.
-     * 
-     * id
-     * email
-     * created_on
-     */
+    /********************************************************
+    Retrieve user info.
+    
+     - id
+     - email
+     - created_on
+    *********************************************************/
     public static function getUser(string $id) {
         $stmt = 'SELECT 
         u.id,
@@ -110,29 +112,9 @@ class DB
     }
 
 
-    /**
-     * Insert a new event
-     *  
-     * id
-     * user_id
-     * name
-     * link
-     * description
-     * phone_number
-     * location_address_1
-     * location_address_2
-     * location_city
-     * location_state
-     * location_zip
-     * starts_on
-     * ends_on
-     * starts_at
-     * ends_at
-     * frequency
-     * seperation
-     * count
-     * until
-     */
+    /********************************************************
+    Insert a new event
+    *********************************************************/
     public static function insertEvent($user_id, $eventStruct) {
         $stmt = 'INSERT INTO Events (
             id, user_id, name, description, phone_number, 
@@ -147,9 +129,6 @@ class DB
             :starts_on, :ends_on, :starts_at, :ends_at, 
             :frequency, :seperation, :count, :until
         )';
-
-
-
 
         $sql = DB::dbConnect()->prepare($stmt);
 
@@ -217,6 +196,9 @@ class DB
         return $sql;
     }
 
+    /********************************************************
+    Inserts a new event recurrence record into the database
+    *********************************************************/
     public static function insertEventRecurrence(EventStruct $eventStruct) {
 
         $stmt = 'INSERT INTO Event_Recurrences (id, event_id, day, week, month) 
@@ -256,12 +238,13 @@ class DB
 
     }
 
-    /**
-     * Returs all events belonging to a user within a range of dates.
-     * 
-     * Calls the SQL procedure Get_Events().
-     */
-    public static function getEvents($userID, $startsOn, $endsOn) {
+
+    /********************************************************
+    Returns all events belonging to a user within a range of dates.
+    
+    Calls the SQL procedure Get_Events().
+    *********************************************************/
+    public static function getEventsRecurrences($userID, $startsOn, $endsOn) {
         $stmt = 'CALL Get_Events(:userID, :startsOn, :endsOn)';
 
         $sql = DB::dbConnect()->prepare($stmt);
@@ -274,6 +257,22 @@ class DB
 
         $endsOn = filter_var($endsOn, FILTER_SANITIZE_STRING);
         $sql->bindParam(':endsOn', $endsOn, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        return $sql;
+    }
+
+    /********************************************************
+    Returns the meta-data for all of a user's events
+    *********************************************************/
+    public static function getEvents($userID) {
+        $stmt = 'CALL Get_Events_Meta(:userID)';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':userID', $userID, PDO::PARAM_STR);
 
         $sql->execute();
 
