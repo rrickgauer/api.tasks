@@ -9,7 +9,7 @@ include_once('Common-Functions.php');
 /***************************************************************************
 The Events class handles all the requests for events.
 ****************************************************************************/
-class Events 
+class EventsData 
 {
     protected $userID;
     protected $events;
@@ -57,47 +57,47 @@ class Events
 /***************************************************************************
 Interfaces with the recurrences db data
 ****************************************************************************/
-class Recurrences extends Events
-{
-    protected $startsOn;
-    protected $endsOn;
-    protected $recurrences;
+// class Recurrences extends Events
+// {
+//     protected $startsOn;
+//     protected $endsOn;
+//     protected $recurrences;
 
-    /********************************************************
-    Constructor
-    *********************************************************/
-    public function __construct($userID, $startsOn, $endsOn) {
-        parent::__construct($userID);
+//     /********************************************************
+//     Constructor
+//     *********************************************************/
+//     public function __construct($userID, $startsOn, $endsOn) {
+//         parent::__construct($userID);
 
-        $this->recurrences = NULL;
-        $this->startsOn = $startsOn;
-        $this->endsOn = $endsOn;
-    }
+//         $this->recurrences = NULL;
+//         $this->startsOn = $startsOn;
+//         $this->endsOn = $endsOn;
+//     }
 
 
-    /********************************************************
-    Set the recurrences field with data from the db
-    *********************************************************/
-    protected function setRecurrences() {
-        // get data from the database
-        $recurrenceData = DB::getEventsRecurrences($this->userID, $this->startsOn, $this->endsOn)->fetchAll(PDO::FETCH_ASSOC);
+//     /********************************************************
+//     Set the recurrences field with data from the db
+//     *********************************************************/
+//     protected function setRecurrences() {
+//         // get data from the database
+//         $recurrenceData = DB::getEventsRecurrences($this->userID, $this->startsOn, $this->endsOn)->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->recurrences = $recurrenceData;
-    }
+//         $this->recurrences = $recurrenceData;
+//     }
 
-    /********************************************************
-    Return the recurrences
-    *********************************************************/
-    public function getRecurrences() {
-        // make sure the recurrences are set before returning them
-        if ($this->recurrences == NULL) {
-            $this->setRecurrences();
-        }
+//     /********************************************************
+//     Return the recurrences
+//     *********************************************************/
+//     public function getRecurrences() {
+//         // make sure the recurrences are set before returning them
+//         if ($this->recurrences == NULL) {
+//             $this->setRecurrences();
+//         }
 
-        return $this->recurrences;
-    }
+//         return $this->recurrences;
+//     }
 
-}
+// }
 
 
 /***************************************************************************

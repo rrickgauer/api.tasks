@@ -48,11 +48,63 @@ abstract class Module
     public function setUserID($newUserID) {
         $this->userID = $newUserID;
     }
+
+    public function getData() {
+        return $this->data;
+    }
 }
 
 
+/***************************************************************************
+Events
 
+This class handles all requests for the events module
+****************************************************************************/
+class Events extends Module
+{
 
+    /********************************************************
+    Abstract implementation for GET
+    *********************************************************/
+    public function get($eventID = NULL) {
+
+        if ($eventID == NULL) {
+            $this->setEvents();
+        }
+
+        Common::printJson($this->data);
+        Common::returnSuccessfulGet();
+    }
+    
+    
+    /********************************************************
+    Returns an array of events from the db
+    *********************************************************/
+    protected function getEvents() {
+        // if the events hasn't been filled yet, do so
+        if ($this->data == NULL) {
+            $this->setEvents();    
+        }
+
+        return $this->data;
+    }
+
+    /********************************************************
+    Retrieves all the events for a user from the database
+    *********************************************************/
+    protected function setEvents() {
+        $eventsData = DB::getEvents($this->userID);
+
+        $events = [];
+
+        // fill the events array with Event objects
+        while ($event = $eventsData->fetch(PDO::FETCH_ASSOC)) {
+            array_push($events, new EventStruct($event));
+        }
+
+        $this->data = $events;
+    }
+}
 
 
 
