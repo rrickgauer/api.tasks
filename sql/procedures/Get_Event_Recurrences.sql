@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE PROCEDURE `Get_Event_Recurrence_Dates`(
+CREATE PROCEDURE `Get_Event_Recurrences`(
 	IN event_id CHAR(36),
     IN range_start DATE,
     IN range_end DATE,
@@ -107,28 +107,11 @@ SP: BEGIN
     IF return_results = TRUE THEN
 		SELECT 
 			teod.event_id AS event_id, 
-			teod.occurs_on AS occurs_on,
-			e.name AS name,
-			e.description AS description,
-			e.phone_number AS phone_number,
-			e.location_address_1 AS location_address_1,
-			e.location_address_2 AS location_address_2,
-			e.location_city AS location_city,
-			e.location_state AS location_state,
-			e.location_zip AS location_zip,
-			e.starts_on AS starts_on,
-			e.ends_on AS ends_on,
-			e.frequency AS frequency,
-			e.seperation AS seperation,
-			e.created_on AS created_on,
-			er.id AS recurrence_id,
-			er.day AS recurrence_day,
-			er.week AS recurrence_week,
-			er.month AS recurrence_month
+            e.name AS name,
+			teod.occurs_on AS occurs_on
 		FROM
 			Temp_Event_Occurrence_Dates teod
 			LEFT JOIN Events e ON teod.event_id = e.id
-			LEFT JOIN Event_Recurrences er ON teod.event_id = er.event_id
 		ORDER BY occurs_on ASC;
     
 		DROP TABLE Temp_Event_Occurrence_Dates;
