@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE PROCEDURE `Get_Event_Recurrence_Dates`(
+CREATE PROCEDURE `Get_Event_Recurrences`(
 	IN event_id CHAR(36),
     IN range_start DATE,
     IN range_end DATE,
