@@ -245,7 +245,7 @@ class DB
     Calls the SQL procedure Get_Events().
     *********************************************************/
     public static function getEventsRecurrences($userID, $startsOn, $endsOn) {
-        $stmt = 'CALL Get_Events(:userID, :startsOn, :endsOn)';
+        $stmt = 'CALL Get_Recurrences(:userID, :startsOn, :endsOn)';
 
         $sql = DB::dbConnect()->prepare($stmt);
         
@@ -267,12 +267,28 @@ class DB
     Returns the meta-data for all of a user's events
     *********************************************************/
     public static function getEvents($userID) {
-        $stmt = 'CALL Get_Events_Meta(:userID)';
+        $stmt = 'CALL Get_Events(:userID)';
 
         $sql = DB::dbConnect()->prepare($stmt);
 
         $userID = filter_var($userID, FILTER_SANITIZE_STRING);
         $sql->bindParam(':userID', $userID, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        return $sql;
+    }
+
+    /********************************************************
+    Returns the meta-data for 1 event
+    *********************************************************/
+    public static function getEvent($eventID) {
+        $stmt = 'CALL Get_Event(:eventID)';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
 
         $sql->execute();
 
