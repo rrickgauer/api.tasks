@@ -10,8 +10,8 @@ require_once('Parser.php');
 require_once('Constants.php');
 require_once('Return-Codes.php');
 require_once('User.php');
-require_once('Events.php');
-
+// require_once('Events.php');
+require_once('Module.php');
 
 // setup the parser
 $parser = new Parser();
@@ -19,7 +19,6 @@ $module = $parser->getModule();
 $requestMethod = strtoupper($parser->getRequestMethod());
 
 $ReturnCodes = new ReturnCodes();
-
 
 
 /***************************************************************************
@@ -91,49 +90,16 @@ Events section.
 ****************************************************************************/
 else if ($module == Constants::Modules['Events']) {
     $userID = $parser->getUserId();
-
-    /**
-     * Create a new event
-     */
-    if ($requestMethod == Constants::RequestMethods['POST']) {
-        $eventParser = new ParserEvents();
-
-        // $newEventData = Common::getNewEventRequestData();
-        $newEventData = $eventParser->getNewEventRequestData();
-        $newEvent = new EventStruct($newEventData);
-
-        $dbResult = DB::insertEvent($userID, $newEvent);
-
-        if ($dbResult->rowCount() != 1) {
-            Common::printJson($ReturnCodes->Error_InsertNewEvent);
-            Common::returnUnsuccessfulCreation();
-            exit;
-        }
-
-        $dbResult = DB::insertEventRecurrence($newEvent);
-
-        if ($dbResult->rowCount() != 1) {
-            Common::printJson($ReturnCodes->Error_InsertNewEvent);
-            Common::returnUnsuccessfulCreation();
-            exit;
-        }
-
-        Common::returnSuccessfulCreation();
-        exit;
-    }
+    $eventsModule = new Events($userID);
 
     /**
      * Get the events for a user
-     * Meta data
      */
-    else if ($requestMethod == Constants::RequestMethods['GET']) {
-        $events = new Events($parser->getUserId());
-
-        Common::printJson($events->getEvents());
-        Common::returnSuccessfulGet();
-
-        exit;
+    if ($requestMethod == Constants::RequestMethods['GET']) {
+        $eventsModule->get();
     }
+
+    exit;
 }
 
 /***************************************************************************
