@@ -89,14 +89,19 @@ if ($module == Constants::Modules['Users']) {
 Events section.
 ****************************************************************************/
 else if ($module == Constants::Modules['Events']) {
-    $userID = $parser->getUserId();
+    $parserEvents = new ParserEvents();
+    $userID = $parserEvents->getUserId();
     $eventsModule = new Events($userID);
 
     /**
      * Get the events for a user
      */
     if ($requestMethod == Constants::RequestMethods['GET']) {
-        $eventsModule->get();
+        if (!$parserEvents->isEventIDSet()) {
+            $eventsModule->get();
+        } else {
+            $eventsModule->get($parserEvents->getEventID());
+        }
     }
 
     exit;

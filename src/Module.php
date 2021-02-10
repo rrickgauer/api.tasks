@@ -70,6 +70,8 @@ class Events extends Module
 
         if ($eventID == NULL) {
             $this->setEvents();
+        } else {
+            $this->setEvent($eventID);
         }
 
         Common::printJson($this->data);
@@ -78,31 +80,19 @@ class Events extends Module
     
     
     /********************************************************
-    Returns an array of events from the db
-    *********************************************************/
-    protected function getEvents() {
-        // if the events hasn't been filled yet, do so
-        if ($this->data == NULL) {
-            $this->setEvents();    
-        }
-
-        return $this->data;
-    }
-
-    /********************************************************
     Retrieves all the events for a user from the database
     *********************************************************/
     protected function setEvents() {
-        $eventsData = DB::getEvents($this->userID);
+        $eventsData = DB::getEvents($this->userID)->fetchAll(PDO::FETCH_ASSOC);
+        $this->data = $eventsData;
+    }
 
-        $events = [];
-
-        // fill the events array with Event objects
-        while ($event = $eventsData->fetch(PDO::FETCH_ASSOC)) {
-            array_push($events, new EventStruct($event));
-        }
-
-        $this->data = $events;
+    /********************************************************
+    Set's the data field to the meta data retrieved for 1 event
+    *********************************************************/
+    protected function setEvent($eventID) {
+        $eventData = DB::getEvent($eventID)->fetch(PDO::FETCH_ASSOC);
+        $this->data = $eventData;
     }
 }
 

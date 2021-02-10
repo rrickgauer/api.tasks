@@ -17,7 +17,7 @@ class Parser
     protected $module;
     protected $requestMethod;
     protected $userID;
-
+    protected $eventID;
 
     /********************************************************
     Default constructor.
@@ -35,6 +35,7 @@ class Parser
         $this->setModule();
         $this->setRequestMethod();
         $this->setUserId();
+        $this->setEventID();
     }
 
 
@@ -109,7 +110,39 @@ class Parser
     public function getUserId() {
         return $this->userID;
     }
+
+    /********************************************************
+    Sets the eventID.
+
+    Checks if an event_id was included in the URL.
+    If it was, set it.
+    Otherwise, set the field to NULL.
+    *********************************************************/
+    protected function setEventID() {
+        $eventID = null;
+
+        if (isset($this->request[1])) {
+            $eventID = $this->request[1];
+        }
+
+        $this->eventID = $eventID;
+    }
+
+    public function getEventID() {
+        return $this->eventID;
+    }
+
+    public function isEventIDSet() {
+        if ($this->eventID != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+
+
+
 
 
 
@@ -196,14 +229,6 @@ ParserEvents
 This class is responsible for parsing request data for Events
 ***********************************************************************/
 class ParserEvents extends Parser {
-
-    /********************************************************
-    Default constructor
-    *********************************************************/
-    public function __construct() {
-        parent::__construct();
-    }
-
 
     /********************************************************
     Returns an array with all of the event data sent to the api.
