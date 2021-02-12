@@ -89,18 +89,18 @@ if ($module == Constants::Modules['Users']) {
 Events section.
 ****************************************************************************/
 else if ($module == Constants::Modules['Events']) {
-    $parserEvents = new ParserEvents();
-    $userID = $parserEvents->getUserId();
+    $parser = new ParserEvents();
+    $userID = $parser->getUserId();
     $eventsModule = new Events($userID);
 
     /**
      * Get the events for a user
      */
     if ($requestMethod == Constants::RequestMethods['GET']) {
-        if (!$parserEvents->isEventIDSet()) {
+        if (!$parser->isEventIDSet()) {
             $eventsModule->get();
         } else {
-            $eventsModule->get($parserEvents->getEventID());
+            $eventsModule->get($parser->getEventID());
         }
     }
 
@@ -111,15 +111,22 @@ else if ($module == Constants::Modules['Events']) {
 Recurrences section.
 ****************************************************************************/
 else if ($module == Constants::Modules['Recurrences']) {
+    $parser = new ParserRecurrences();
+    $userID = $parser->getUserId();
+    $recurrencesModule = new Recurrences($userID);
+
     /**
      * Get the event recurrences between a set of dates
      */
     if ($requestMethod == Constants::RequestMethods['GET']) {
-        $recurrenceParser = new ParserRecurrences();
-        $recurrences = new Recurrences($recurrenceParser->getUserId(), $recurrenceParser->getDateStart(), $recurrenceParser->getDateEnd());
+        $startsOn = $parser->getDateStart();
+        $endsOn = $parser->getDateEnd();
 
-        Common::printJson($recurrences->getRecurrences());
-        Common::returnSuccessfulGet();
+        if (!$parser->isEventIDSet()) {
+            $recurrencesModule->get($startsOn, $endsOn);
+        } else {
+            $recurrencesModule->get($startsOn, $endsOn, $parser->getEventID());
+        }
 
         exit;
     }

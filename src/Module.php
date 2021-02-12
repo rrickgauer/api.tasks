@@ -11,7 +11,7 @@ Module
 
 This class is the parent of all the module children class.
 ****************************************************************************/
-abstract class Module
+class Module
 {
     /********************************************************
     Private/protected data members
@@ -31,12 +31,11 @@ abstract class Module
     /********************************************************
     abstract Methods
     *********************************************************/
-    abstract protected function get();
-    // abstract protected function post();
-    // abstract protected function delete();
-    // abstract protected function put();
 
-
+    public function get() {
+        Common::printJson($this->data);
+        Common::returnSuccessfulGet();
+    }
 
     /********************************************************
     Access methods
@@ -62,38 +61,90 @@ This class handles all requests for the events module
 ****************************************************************************/
 class Events extends Module
 {
-
     /********************************************************
     Abstract implementation for GET
     *********************************************************/
     public function get($eventID = NULL) {
-
         if ($eventID == NULL) {
-            $this->setEvents();
+            $this->data = $this->getEvents();
         } else {
-            $this->setEvent($eventID);
+            $this->data = $this->getEvent($eventID);
         }
 
-        Common::printJson($this->data);
-        Common::returnSuccessfulGet();
+        parent::get();
     }
     
     
     /********************************************************
     Retrieves all the events for a user from the database
     *********************************************************/
-    protected function setEvents() {
+    protected function getEvents() {
         $eventsData = DB::getEvents($this->userID)->fetchAll(PDO::FETCH_ASSOC);
-        $this->data = $eventsData;
+        return $eventsData;
     }
 
     /********************************************************
     Set's the data field to the meta data retrieved for 1 event
     *********************************************************/
-    protected function setEvent($eventID) {
+    protected function getEvent($eventID) {
         $eventData = DB::getEvent($eventID)->fetch(PDO::FETCH_ASSOC);
-        $this->data = $eventData;
+        return $eventData;
     }
+}
+
+/***************************************************************************
+Recurrences
+
+This class handles all requests for the recurrences module
+****************************************************************************/
+class Recurrences extends Module 
+{
+    /********************************************************
+    Abstract implementation for GET
+    *********************************************************/
+    public function get($startsOn = null, $endsOn = null, $eventID = NULL) {
+        $ReturnCodes = new ReturnCodes();
+
+        // verify that both the starts_on and ends_on parms are set in the url
+        if ($startsOn == null) {
+            http_response_code(400);
+            Common::printJson($ReturnCodes->Error_GetRecurrences_NoStartDate);    
+            exit;
+        } 
+        else if ($endsOn == null) {
+            http_response_code(400);
+            Common::printJson($ReturnCodes->Error_GetRecurrences_NoEndDate);    
+            exit;
+        }
+
+        // should api send recurrences for all events, or just 1?
+        if ($eventID == NULL) {
+            $this->data = $this->getRecurrences($startsOn, $endsOn);
+        } else {
+            $this->data = $this->getEventRecurrences($eventID, $startsOn, $endsOn);
+        }
+
+        parent::get();
+    }
+    
+    
+    /********************************************************
+    Retrieves all recurrences for a user from the database
+    between a set of dates.
+    *********************************************************/
+    protected function getRecurrences($startsOn, $endsOn) {
+        $eventsData = DB::getRecurrences($this->userID, $startsOn, $endsOn)->fetchAll(PDO::FETCH_ASSOC);
+        return $eventsData;
+    }
+
+    /********************************************************
+    Retrieve all the recurrences for 1 event
+    *********************************************************/
+    protected function getEventRecurrences($eventID, $startsOn, $endsOn) {
+        $eventData = DB::getEventRecurrences($eventID, $startsOn, $endsOn)->fetchAll(PDO::FETCH_ASSOC);
+        return $eventData;
+    }
+
 }
 
 

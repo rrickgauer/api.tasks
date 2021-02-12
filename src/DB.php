@@ -244,11 +244,10 @@ class DB
     
     Calls the SQL procedure Get_Events().
     *********************************************************/
-    public static function getEventsRecurrences($userID, $startsOn, $endsOn) {
+    public static function getRecurrences($userID, $startsOn, $endsOn) {
         $stmt = 'CALL Get_Recurrences(:userID, :startsOn, :endsOn)';
-
         $sql = DB::dbConnect()->prepare($stmt);
-        
+
         $userID = filter_var($userID, FILTER_SANITIZE_STRING);
         $sql->bindParam(':userID', $userID, PDO::PARAM_STR);
 
@@ -289,6 +288,28 @@ class DB
 
         $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
         $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $sql->execute();
+
+        return $sql;
+    }
+
+
+    /********************************************************
+    Get the recurrences for 1 event
+    *********************************************************/
+    public static function getEventRecurrences($eventID, $startsOn, $endsOn) {
+        $stmt = 'CALL Get_Event_Recurrences(:eventID, :startsOn, :endsOn, true)';
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $startsOn = filter_var($startsOn, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':startsOn', $startsOn, PDO::PARAM_STR);
+
+        $endsOn = filter_var($endsOn, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':endsOn', $endsOn, PDO::PARAM_STR);
 
         $sql->execute();
 
