@@ -6,98 +6,7 @@ include_once('Return-Codes.php');
 include_once('Constants.php');
 include_once('Common-Functions.php');
 
-/***************************************************************************
-The Events class handles all the requests for events.
-****************************************************************************/
-class EventsData 
-{
-    protected $userID;
-    protected $events;
 
-    /***************************************************************************
-    Default constructor
-    ****************************************************************************/
-    public function __construct($userID) {
-        $this->userID = $userID;
-        $this->events = NULL;
-    }
-
-    /***************************************************************************
-    Returns an array of events from the db
-    ****************************************************************************/
-    public function getEvents() {
-        // if the events hasn't been filled yet, do so
-        if ($this->events == NULL) {
-            $this->setEvents();    
-        }
-
-        return $this->events;
-    }
-
-    /***************************************************************************
-    Retrieves all the events for a user from the database
-    ****************************************************************************/
-    protected function setEvents() {
-        $eventsData = DB::getEvents($this->userID);
-
-        $events = [];
-
-        // fill the events array with Event objects
-        while ($event = $eventsData->fetch(PDO::FETCH_ASSOC)) {
-            array_push($events, new EventStruct($event));
-        }
-
-        $this->events = $events;
-    }
-}
-
-
-
-
-/***************************************************************************
-Interfaces with the recurrences db data
-****************************************************************************/
-// class Recurrences extends Events
-// {
-//     protected $startsOn;
-//     protected $endsOn;
-//     protected $recurrences;
-
-//     /********************************************************
-//     Constructor
-//     *********************************************************/
-//     public function __construct($userID, $startsOn, $endsOn) {
-//         parent::__construct($userID);
-
-//         $this->recurrences = NULL;
-//         $this->startsOn = $startsOn;
-//         $this->endsOn = $endsOn;
-//     }
-
-
-//     /********************************************************
-//     Set the recurrences field with data from the db
-//     *********************************************************/
-//     protected function setRecurrences() {
-//         // get data from the database
-//         $recurrenceData = DB::getEventsRecurrences($this->userID, $this->startsOn, $this->endsOn)->fetchAll(PDO::FETCH_ASSOC);
-
-//         $this->recurrences = $recurrenceData;
-//     }
-
-//     /********************************************************
-//     Return the recurrences
-//     *********************************************************/
-//     public function getRecurrences() {
-//         // make sure the recurrences are set before returning them
-//         if ($this->recurrences == NULL) {
-//             $this->setRecurrences();
-//         }
-
-//         return $this->recurrences;
-//     }
-
-// }
 
 
 /***************************************************************************
@@ -156,47 +65,28 @@ class EventStruct
 }
 
 
+/***************************************************************************
+This is the data structure class for an event recurrence.
+****************************************************************************/
+class RecurrenceStruct
+{
+    public $id;
+    public $event_id;
+    public $week;
+    public $day;
+    public $month;
 
+    public function __construct($inDataArray) {
+        error_reporting(E_ERROR | E_PARSE);
 
+         $this->id       = $inDataArray['id'];
+         $this->event_id = $inDataArray['event_id'];
+         $this->week     = $inDataArray['week'];
+         $this->day      = $inDataArray['day'];
+         $this->month    = $inDataArray['month'];
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 

@@ -199,7 +199,7 @@ class DB
     /********************************************************
     Inserts a new event recurrence record into the database
     *********************************************************/
-    public static function insertEventRecurrence(EventStruct $eventStruct) {
+    public static function insertEventRecurrence(RecurrenceStruct $eventStruct) {
 
         $stmt = 'INSERT INTO Event_Recurrences (id, event_id, day, week, month) 
         VALUES (:recurrence_id, :event_id, :day, :week, :month)';
@@ -207,23 +207,33 @@ class DB
         $sql = DB::dbConnect()->prepare($stmt);
 
         // recurrence and event ids cannot be null, so sanitize them
-        $event_id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
-        $recurrence_id = filter_var($eventStruct->recurrence_id, FILTER_SANITIZE_STRING);
+        $event_id = filter_var($eventStruct->event_id, FILTER_SANITIZE_STRING);
+        $recurrence_id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
         
-        $day = $eventStruct->recurrence_day;
+        $day = $eventStruct->day;
         if ($day != null) {
             $day = filter_var($day, FILTER_SANITIZE_NUMBER_INT);
         }
 
-        $week = $eventStruct->recurrence_week;
+        $week = $eventStruct->week;
         if ($week != null) {
             $week = filter_var($week, FILTER_SANITIZE_NUMBER_INT);
         }
 
-        $month = $eventStruct->recurrence_month;
+        $month = $eventStruct->month;
         if ($month != null) {
             $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
         }
+
+        $sup = [
+            "day" => $day,
+            "week" => $week,
+            "month" => $month,
+        ];
+
+        // Common::printJson($sup);
+        // Common::printJson($eventStruct);
+        // exit;
 
         // bind the parms
         $sql->bindParam(':recurrence_id', $recurrence_id, PDO::PARAM_STR);

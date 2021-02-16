@@ -219,6 +219,31 @@ class ParserRecurrences extends Parser
         return $this->dateEnd;
     }
 
+
+
+    public function getNewRecurrenceRequestData() {
+        $newRecurrenceData = [];
+        $eventKeys = array_values(Constants::RecurrenceProperties);  // recurrence fields 
+
+        /**
+         * loop through the event fields constant to check and see if the key is in the post request data
+         * if it is, add it to the array
+         * otherwise, set it to null
+         */
+        for ($count = 0; $count < count($eventKeys); $count++) {
+            $key = $eventKeys[$count];
+
+            if (isset($_POST[$key]) && $_POST[$key] != "") {
+                $newRecurrenceData[$key] = $_POST[$key];
+            } else {
+                $newRecurrenceData[$key] = null;
+            }
+
+        }
+
+        return $newRecurrenceData;
+    }
+
 }
 
 

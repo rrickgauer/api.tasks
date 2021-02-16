@@ -21,6 +21,9 @@ $requestMethod = strtoupper($parser->getRequestMethod());
 $ReturnCodes = new ReturnCodes();
 
 
+// Common::printJson($_SERVER);
+// exit;
+
 /***************************************************************************
 Users section.
 ****************************************************************************/
@@ -94,7 +97,7 @@ else if ($module == Constants::Modules['Events']) {
     $eventsModule = new Events($userID);
 
     /**
-     * Get the events for a user
+     * GET the events for a user
      */
     if ($requestMethod == Constants::RequestMethods['GET']) {
         if (!$parser->isEventIDSet()) {
@@ -102,6 +105,17 @@ else if ($module == Constants::Modules['Events']) {
         } else {
             $eventsModule->get($parser->getEventID());
         }
+    }
+
+    /**
+     * POST a new event
+     */
+    else if ($requestMethod == Constants::RequestMethods['POST']) {
+        $eventStruct = new EventStruct($parser->getNewEventRequestData());
+        $eventsModule->post($eventStruct);
+
+        exit;
+
     }
 
     exit;
@@ -128,6 +142,18 @@ else if ($module == Constants::Modules['Recurrences']) {
             $recurrencesModule->get($startsOn, $endsOn, $parser->getEventID());
         }
 
+        exit;
+    }
+
+    /**
+     * Post a new event recurrence
+     */
+    else if ($requestMethod == Constants::RequestMethods['POST']) {
+        $recurrenceData = $parser->getNewRecurrenceRequestData();
+        $recurrenceStruct = new RecurrenceStruct($recurrenceData);
+        
+        $recurrencesModule->post($recurrenceStruct);
+        
         exit;
     }
 }

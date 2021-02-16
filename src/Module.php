@@ -31,10 +31,13 @@ class Module
     /********************************************************
     abstract Methods
     *********************************************************/
-
     public function get() {
         Common::printJson($this->data);
         Common::returnSuccessfulGet();
+    }
+
+    public function post() {
+        Common::returnSuccessfulCreation();
     }
 
     /********************************************************
@@ -90,6 +93,24 @@ class Events extends Module
         $eventData = DB::getEvent($eventID)->fetch(PDO::FETCH_ASSOC);
         return $eventData;
     }
+
+
+    /********************************************************
+    Post a new event
+    *********************************************************/
+    public function post($newEventData = null) {
+        $dbResult = DB::insertEvent($this->userID, $newEventData);
+        
+        if ($dbResult->rowCount() == 1) {
+            parent::post();
+        } else {
+            Common::returnUnsuccessfulCreation();
+        }        
+    }
+
+
+
+
 }
 
 /***************************************************************************
@@ -143,6 +164,19 @@ class Recurrences extends Module
     protected function getEventRecurrences($eventID, $startsOn, $endsOn) {
         $eventData = DB::getEventRecurrences($eventID, $startsOn, $endsOn)->fetchAll(PDO::FETCH_ASSOC);
         return $eventData;
+    }
+
+
+    public function post($newEventRecurrenceStruct = null) {
+        $response = DB::insertEventRecurrence($newEventRecurrenceStruct);
+
+        if ($response->rowCount() == 1) {
+            parent::post();
+        } else {
+            Common::returnUnsuccessfulCreation();
+        }
+
+        exit;
     }
 
 }

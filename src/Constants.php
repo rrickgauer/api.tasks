@@ -51,6 +51,14 @@ class Constants
         "recurrence_month",
     ];
 
+    const RecurrenceProperties = [
+        "id",
+        "event_id",
+        "week",
+        "day",
+        "month",
+    ];
+
 
 }
 
