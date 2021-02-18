@@ -43,12 +43,6 @@ class Constants
         "ends_at",
         "frequency",
         "seperation",
-        "count",
-        "until",
-        "recurrence_id",
-        "recurrence_day",
-        "recurrence_week",
-        "recurrence_month",
     ];
 
     const RecurrenceProperties = [

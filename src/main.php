@@ -115,8 +115,19 @@ else if ($module == Constants::Modules['Events']) {
         $eventsModule->post($eventStruct);
 
         exit;
-
     }
+
+    /**
+     * PUT an event
+     */
+    else if ($requestMethod == Constants::RequestMethods['PUT']) {
+        $eventID = $parser->getEventID();
+        $eventData = $parser->getPutData();
+        $eventsModule->put($eventID, $eventData);
+
+        exit;
+    }
+
 
     exit;
 }

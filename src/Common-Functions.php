@@ -67,6 +67,13 @@ class Common
     public static function returnSuccessfulGet() {
         http_response_code(200);
     }
+
+    /********************************************************
+    Unsuccessful PUT request
+    *********************************************************/
+    public static function returnUnsuccessfulPut() {
+        http_response_code(409);
+    }
 }
 
 

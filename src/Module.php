@@ -40,6 +40,10 @@ class Module
         Common::returnSuccessfulCreation();
     }
 
+    public function put($resourceID, $resourceBody) {
+        Common::returnSuccessfulGet();
+    }
+
     /********************************************************
     Access methods
     *********************************************************/
@@ -106,6 +110,55 @@ class Events extends Module
         } else {
             Common::returnUnsuccessfulCreation();
         }        
+    }
+
+    /********************************************************
+    PUT request - update an event
+    *********************************************************/
+    public function put($eventID, $resourceBody) {
+        $requiredEventFields = Constants::EventProperties;
+        unset($requiredEventFields[0]);     // remove the id field 
+
+        // get arrays of each of the keys
+        $requiredEventFields = array_values($requiredEventFields);
+        $resourceBodyKeys = array_keys($resourceBody);
+
+        // check that each key in the required fields array is in the resource body
+        $isFieldMissing = false;
+        $missingFields = [];
+        for ($count = 0; $count < count($requiredEventFields); $count++) {
+            $key = $requiredEventFields[$count];
+
+            if (!in_array($key, $resourceBodyKeys)) {
+                $isFieldMissing = true;
+                array_push($missingFields, $key);
+            }
+        }
+
+        // request body was missing a required field
+        if ($isFieldMissing) {
+            Common::returnUnsuccessfulPut();
+
+            $output = [
+                "message" => "missing required fields",
+                "missing_fields" => $missingFields,
+            ];
+
+            Common::printJson($output);
+
+            exit;
+        } 
+
+
+        // update the db data
+        $rc = DB::updateEvent($eventID, $resourceBody);
+
+        if ($rc->rowCount() != 1) {
+            http_response_code(500);
+            exit;
+        } else {
+            http_response_code(200);
+        }
     }
 
 

@@ -326,6 +326,68 @@ class DB
         return $sql;
     }
 
+    /********************************************************
+    update an event
+    *********************************************************/
+    public static function updateEvent($eventID, $eventData) {
+
+        $stmt = 'UPDATE Events SET 
+              name               = :name,
+              description        = :description,
+              phone_number       = :phone_number,
+              location_address_1 = :location_address_1,
+              location_address_2 = :location_address_2,
+              location_city      = :location_city,
+              location_state     = :location_state,
+              location_zip       = :location_zip,
+              starts_on          = :starts_on,
+              ends_on            = :ends_on,
+              starts_at          = :starts_at,
+              ends_at            = :ends_at,
+              frequency          = :frequency,
+              seperation         = :seperation
+        WHERE id                 = :eventID';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $name               = filter_var($eventData['name'], FILTER_SANITIZE_STRING);
+        $description        = filter_var($eventData['description'], FILTER_SANITIZE_STRING);
+        $phone_number       = filter_var($eventData['phone_number'], FILTER_SANITIZE_STRING);
+        $location_address_1 = filter_var($eventData['location_address_1'], FILTER_SANITIZE_STRING);
+        $location_address_2 = filter_var($eventData['location_address_2'], FILTER_SANITIZE_STRING);
+        $location_city      = filter_var($eventData['location_city'], FILTER_SANITIZE_STRING);
+        $location_state     = filter_var($eventData['location_state'], FILTER_SANITIZE_STRING);
+        $location_zip       = filter_var($eventData['location_zip'], FILTER_SANITIZE_STRING);
+        $starts_on          = filter_var($eventData['starts_on'], FILTER_SANITIZE_STRING);
+        $ends_on            = filter_var($eventData['ends_on'], FILTER_SANITIZE_STRING);
+        $starts_at          = filter_var($eventData['starts_at'], FILTER_SANITIZE_STRING);
+        $ends_at            = filter_var($eventData['ends_at'], FILTER_SANITIZE_STRING);
+        $frequency          = filter_var($eventData['frequency'], FILTER_SANITIZE_STRING);
+        $seperation         = filter_var($eventData['seperation'], FILTER_SANITIZE_NUMBER_INT);
+        $eventID            = filter_var($eventID, FILTER_SANITIZE_STRING);
+
+
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+        $sql->bindParam(':name', $name, PDO::PARAM_STR);
+        $sql->bindParam(':description', $description, PDO::PARAM_STR);
+        $sql->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
+        $sql->bindParam(':location_address_1', $location_address_1, PDO::PARAM_STR);
+        $sql->bindParam(':location_address_2', $location_address_2, PDO::PARAM_STR);
+        $sql->bindParam(':location_city', $location_city, PDO::PARAM_STR);
+        $sql->bindParam(':location_state', $location_state, PDO::PARAM_STR);
+        $sql->bindParam(':location_zip', $location_zip, PDO::PARAM_STR);
+        $sql->bindParam(':starts_on', $starts_on, PDO::PARAM_STR);
+        $sql->bindParam(':ends_on', $ends_on, PDO::PARAM_STR);
+        $sql->bindParam(':starts_at', $starts_at, PDO::PARAM_STR);
+        $sql->bindParam(':ends_at', $ends_at, PDO::PARAM_STR);
+        $sql->bindParam(':frequency', $frequency, PDO::PARAM_STR);
+        $sql->bindParam(':seperation', $seperation, PDO::PARAM_INT);
+
+
+        $sql->execute();
+        return $sql;
+    }
+
 
 }
 

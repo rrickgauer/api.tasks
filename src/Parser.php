@@ -139,6 +139,22 @@ class Parser
             return false;
         }
     }
+
+    /********************************************************
+    Returns the body of a PUT request
+    *********************************************************/
+    public function getPutData() {
+        parse_str(file_get_contents("php://input"), $_PUT);
+
+        foreach ($_PUT as $key => $value) {
+            unset($_PUT[$key]);
+            $_PUT[str_replace('amp;', '', $key)] = $value;
+        }
+
+        $_REQUEST = array_merge($_REQUEST, $_PUT);
+
+        return $_REQUEST;
+    }
 }
 
 
@@ -220,7 +236,9 @@ class ParserRecurrences extends Parser
     }
 
 
-
+    /********************************************************
+    Returns the request body of a new recurrence 
+    *********************************************************/
     public function getNewRecurrenceRequestData() {
         $newRecurrenceData = [];
         $eventKeys = array_values(Constants::RecurrenceProperties);  // recurrence fields 
