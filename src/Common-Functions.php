@@ -28,6 +28,19 @@ class Common
     }
 
     /********************************************************
+    Switches all empty strings in an array to nulls.
+    *********************************************************/
+    public static function emptyStringsToNulls($dataArray) {
+        foreach($dataArray as &$element) {
+            if ($element == '') {
+                $element = null;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    /********************************************************
     Returns a bad request response.
     Use when a url is not correct. Such as an invalid module.
     *********************************************************/
