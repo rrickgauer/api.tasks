@@ -330,7 +330,6 @@ class DB
     update an event
     *********************************************************/
     public static function updateEvent($eventID, $eventData) {
-
         $stmt = 'UPDATE Events SET 
               name               = :name,
               description        = :description,
@@ -350,23 +349,13 @@ class DB
 
         $sql = DB::dbConnect()->prepare($stmt);
 
-        $name               = filter_var($eventData['name'], FILTER_SANITIZE_STRING);
-        $description        = filter_var($eventData['description'], FILTER_SANITIZE_STRING);
-        $phone_number       = filter_var($eventData['phone_number'], FILTER_SANITIZE_STRING);
-        $location_address_1 = filter_var($eventData['location_address_1'], FILTER_SANITIZE_STRING);
-        $location_address_2 = filter_var($eventData['location_address_2'], FILTER_SANITIZE_STRING);
-        $location_city      = filter_var($eventData['location_city'], FILTER_SANITIZE_STRING);
-        $location_state     = filter_var($eventData['location_state'], FILTER_SANITIZE_STRING);
-        $location_zip       = filter_var($eventData['location_zip'], FILTER_SANITIZE_STRING);
-        $starts_on          = filter_var($eventData['starts_on'], FILTER_SANITIZE_STRING);
-        $ends_on            = filter_var($eventData['ends_on'], FILTER_SANITIZE_STRING);
-        $starts_at          = filter_var($eventData['starts_at'], FILTER_SANITIZE_STRING);
-        $ends_at            = filter_var($eventData['ends_at'], FILTER_SANITIZE_STRING);
-        $frequency          = filter_var($eventData['frequency'], FILTER_SANITIZE_STRING);
-        $seperation         = filter_var($eventData['seperation'], FILTER_SANITIZE_NUMBER_INT);
-        $eventID            = filter_var($eventID, FILTER_SANITIZE_STRING);
 
+        // sanitize the parms
+        $eventID  = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $eventData = Common::emptyStringsToNulls($eventData);
+        $myInputs = filter_var_array($eventData);
 
+        // bind the parms
         $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
         $sql->bindParam(':name', $name, PDO::PARAM_STR);
         $sql->bindParam(':description', $description, PDO::PARAM_STR);
