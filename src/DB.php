@@ -225,15 +225,6 @@ class DB
             $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
         }
 
-        $sup = [
-            "day" => $day,
-            "week" => $week,
-            "month" => $month,
-        ];
-
-        // Common::printJson($sup);
-        // Common::printJson($eventStruct);
-        // exit;
 
         // bind the parms
         $sql->bindParam(':recurrence_id', $recurrence_id, PDO::PARAM_STR);
@@ -391,6 +382,51 @@ class DB
 
         $sql->execute();
         return $sql;
+    }
+
+
+    /********************************************************
+    update a recurrence
+    *********************************************************/
+    public static function updateRecurrence($eventID, $recurrenceData) {
+
+        $stmt = 'UPDATE Event_Recurrences SET
+              day      = :day,
+              week     = :week,
+              month    = :month
+        WHERE event_id = :eventID';
+
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        // recurrence and event ids cannot be null, so sanitize them
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        
+        $day = $recurrenceData['day'];
+        if ($day != null) {
+            $day = filter_var($day, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $week = $recurrenceData['week'];
+        if ($week != null) {
+            $week = filter_var($week, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $month = $recurrenceData['month'];
+        if ($month != null) {
+            $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
+        }
+
+
+        // bind the parms
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+        $sql->bindParam(':day', $day, PDO::PARAM_INT);
+        $sql->bindParam(':week', $week, PDO::PARAM_INT);
+        $sql->bindParam(':month', $month, PDO::PARAM_INT);
+
+        $sql->execute();
+        return $sql;
+
     }
 
 

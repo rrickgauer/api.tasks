@@ -244,6 +244,55 @@ class Recurrences extends Module
         exit;
     }
 
+
+    /********************************************************
+    PUT request - update a recurrence
+    *********************************************************/
+    public function put($eventID, $resourceBody) {
+        $requiredRecurrenceFields = Constants::RecurrenceProperties;
+        unset($requiredRecurrenceFields[0]);     // remove the id field 
+        unset($requiredRecurrenceFields[1]);     // remove the id field 
+
+        // get arrays of each of the keys
+        $requiredRecurrenceFields = array_values($requiredRecurrenceFields);
+        $resourceBodyKeys = array_keys($resourceBody);
+
+        // check that each key in the required fields array is in the resource body
+        $isFieldMissing = false;
+        $missingFields = [];
+        for ($count = 0; $count < count($requiredRecurrenceFields); $count++) {
+            $key = $requiredRecurrenceFields[$count];
+
+            if (!in_array($key, $resourceBodyKeys)) {
+                $isFieldMissing = true;
+                array_push($missingFields, $key);
+            }
+        }
+
+        // request body was missing a required field
+        if ($isFieldMissing) {
+            Common::returnUnsuccessfulPut();
+
+            $output = [
+                "message" => "missing required fields",
+                "missing_fields" => $missingFields,
+            ];
+
+            Common::printJson($output);
+            exit;
+        } 
+
+        // update the db data
+        $rc = DB::updateRecurrence($eventID, $resourceBody);
+
+        if ($rc->rowCount() > 1) {
+            http_response_code(500);
+            exit;
+        } else {
+            http_response_code(200);
+        }
+    }
+
 }
 
 
