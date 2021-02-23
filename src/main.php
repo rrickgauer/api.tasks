@@ -176,6 +176,24 @@ else if ($module == Constants::Modules['Recurrences']) {
         
         exit;
     }
+
+    /**
+     * update an event recurrence
+     */
+    else if ($requestMethod == Constants::RequestMethods['PUT']) {
+        $recurrenceData = $parser->getPutData();
+        $eventID = $parser->getEventID();
+
+        // be sure the event ID is set in the URI
+        if ($eventID == null) {
+            http_response_code(400);
+            exit;
+        }
+
+
+        $recurrencesModule->put($eventID, $recurrenceData);
+        exit;
+    }
 }
 
 
