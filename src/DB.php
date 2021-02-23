@@ -377,6 +377,23 @@ class DB
         return $sql;
     }
 
+    /********************************************************
+    delete an event
+    *********************************************************/
+    public static function deleteEvent($eventID) {
+        $stmt = 'DELETE FROM Events where id = :eventID';
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        // sanitize the parms
+        $eventID  = filter_var($eventID, FILTER_SANITIZE_STRING);
+
+        // bind the parms
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
+    }
+
 
 }
 

@@ -128,6 +128,15 @@ else if ($module == Constants::Modules['Events']) {
         exit;
     }
 
+    
+    /**
+     * delete an event recurrence
+     */
+    else if ($requestMethod == Constants::RequestMethods['DELETE']) {
+        $eventsModule->delete($parser->getEventID());
+        exit;
+    }
+
 
     exit;
 }
