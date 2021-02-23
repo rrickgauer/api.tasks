@@ -357,21 +357,20 @@ class DB
 
         // bind the parms
         $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
-        $sql->bindParam(':name', $name, PDO::PARAM_STR);
-        $sql->bindParam(':description', $description, PDO::PARAM_STR);
-        $sql->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
-        $sql->bindParam(':location_address_1', $location_address_1, PDO::PARAM_STR);
-        $sql->bindParam(':location_address_2', $location_address_2, PDO::PARAM_STR);
-        $sql->bindParam(':location_city', $location_city, PDO::PARAM_STR);
-        $sql->bindParam(':location_state', $location_state, PDO::PARAM_STR);
-        $sql->bindParam(':location_zip', $location_zip, PDO::PARAM_STR);
-        $sql->bindParam(':starts_on', $starts_on, PDO::PARAM_STR);
-        $sql->bindParam(':ends_on', $ends_on, PDO::PARAM_STR);
-        $sql->bindParam(':starts_at', $starts_at, PDO::PARAM_STR);
-        $sql->bindParam(':ends_at', $ends_at, PDO::PARAM_STR);
-        $sql->bindParam(':frequency', $frequency, PDO::PARAM_STR);
-        $sql->bindParam(':seperation', $seperation, PDO::PARAM_INT);
-
+        $sql->bindParam(':name', $eventData['name'], PDO::PARAM_STR);
+        $sql->bindParam(':description', $eventData['description'], PDO::PARAM_STR);
+        $sql->bindParam(':phone_number', $eventData['phone_number'], PDO::PARAM_STR);
+        $sql->bindParam(':location_address_1', $eventData['location_address_1'], PDO::PARAM_STR);
+        $sql->bindParam(':location_address_2', $eventData['location_address_2'], PDO::PARAM_STR);
+        $sql->bindParam(':location_city', $eventData['location_city'], PDO::PARAM_STR);
+        $sql->bindParam(':location_state', $eventData['location_state'], PDO::PARAM_STR);
+        $sql->bindParam(':location_zip', $eventData['location_zip'], PDO::PARAM_STR);
+        $sql->bindParam(':starts_on', $eventData['starts_on'], PDO::PARAM_STR);
+        $sql->bindParam(':ends_on', $eventData['ends_on'], PDO::PARAM_STR);
+        $sql->bindParam(':starts_at', $eventData['starts_at'], PDO::PARAM_STR);
+        $sql->bindParam(':ends_at', $eventData['ends_at'], PDO::PARAM_STR);
+        $sql->bindParam(':frequency', $eventData['frequency'], PDO::PARAM_STR);
+        $sql->bindParam(':seperation', $eventData['seperation'], PDO::PARAM_INT);
 
         $sql->execute();
         return $sql;
