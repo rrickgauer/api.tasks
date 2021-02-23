@@ -229,6 +229,9 @@ class Recurrences extends Module
     }
 
 
+    /********************************************************
+    Insert a new event recurrence
+    *********************************************************/
     public function post($newEventRecurrenceStruct = null) {
         $response = DB::insertEventRecurrence($newEventRecurrenceStruct);
 
