@@ -145,7 +145,6 @@ class Events extends Module
             ];
 
             Common::printJson($output);
-
             exit;
         } 
 
@@ -161,8 +160,18 @@ class Events extends Module
         }
     }
 
+    /********************************************************
+    DELETE request - delete an event
+    *********************************************************/
+    public function delete($eventID) {
+        $dbResult = DB::deleteEvent($eventID);
 
-
+        if ($dbResult->rowCount() == 1) {
+            http_response_code(204);
+        } else {
+            Common::returnRequestNotFound();
+        }
+    }
 
 }
 
