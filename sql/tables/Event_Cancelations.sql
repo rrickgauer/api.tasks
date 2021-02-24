@@ -1,0 +1,9 @@
+CREATE TABLE `Event_Cancelations` (
+    `id` CHAR(36) COLLATE UTF8_UNICODE_CI NOT NULL,
+    `event_id` CHAR(36) COLLATE UTF8_UNICODE_CI NOT NULL,
+    `date` DATE NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`),
+    KEY `event_id` (`event_id`),
+    CONSTRAINT `Event_Cancelations_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `Events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=UTF8 COLLATE=UTF8_UNICODE_CI;

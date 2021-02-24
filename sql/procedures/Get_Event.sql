@@ -22,7 +22,10 @@ SELECT
 	e.seperation AS seperation,
 	e.count AS count,
 	e.until AS until,
-	e.created_on AS created_on
+	e.created_on AS created_on,
+    e.recurrence_day AS recurrence_day,
+    e.recurrence_week AS recurrence_week,
+    e.recurrence_month AS recurrence_month
 FROM 
 	Events e
 WHERE 

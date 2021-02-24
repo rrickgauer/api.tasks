@@ -56,36 +56,11 @@ class EventStruct
         $this->seperation         = $inDataArray['seperation'];
         $this->count              = $inDataArray['count'];
         $this->until              = $inDataArray['until'];
-        $this->recurrence_id      = $inDataArray['recurrence_id'];
         $this->recurrence_day     = $inDataArray['recurrence_day'];
         $this->recurrence_week    = $inDataArray['recurrence_week'];
         $this->recurrence_month   = $inDataArray['recurrence_month'];
 
     }
-}
-
-
-/***************************************************************************
-This is the data structure class for an event recurrence.
-****************************************************************************/
-class RecurrenceStruct
-{
-    public $id;
-    public $event_id;
-    public $week;
-    public $day;
-    public $month;
-
-    public function __construct($inDataArray) {
-        error_reporting(E_ERROR | E_PARSE);
-
-         $this->id       = $inDataArray['id'];
-         $this->event_id = $inDataArray['event_id'];
-         $this->week     = $inDataArray['week'];
-         $this->day      = $inDataArray['day'];
-         $this->month    = $inDataArray['month'];
-    }
-
 }
 
 
