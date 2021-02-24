@@ -18,6 +18,7 @@ class Parser
     protected $requestMethod;
     protected $userID;
     protected $eventID;
+    protected $requestedDate;
 
     /********************************************************
     Default constructor.
@@ -128,6 +129,10 @@ class Parser
         $this->eventID = $eventID;
     }
 
+    /********************************************************
+    Returns the event id from the URI
+    /module/event_id
+    *********************************************************/
     public function getEventID() {
         return $this->eventID;
     }
@@ -154,6 +159,20 @@ class Parser
         $_REQUEST = array_merge($_REQUEST, $_PUT);
 
         return $_REQUEST;
+    }
+
+    /********************************************************
+    Returns the requested date from the URI
+    /module/event_id/requested_date
+    *********************************************************/
+    public function setRequestedDate() {
+        $requestedDate = null;
+
+        if (isset($this->request[2])) {
+            $requestedDate = $this->request[2];
+        }
+
+        $this->requestedDate = $requestedDate;
     }
 }
 
@@ -298,9 +317,6 @@ class ParserEvents extends Parser {
 
         return $newEventData;
     }
-
-
-
 
 
 }
