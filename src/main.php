@@ -163,35 +163,11 @@ else if ($module == Constants::Modules['Recurrences']) {
         }
 
         exit;
-    }
-
-    /**
-     * Post a new event recurrence
-     */
-    else if ($requestMethod == Constants::RequestMethods['POST']) {
-        $recurrenceData = $parser->getNewRecurrenceRequestData();
-        $recurrenceStruct = new RecurrenceStruct($recurrenceData);
-        
-        $recurrencesModule->post($recurrenceStruct);
-        
-        exit;
-    }
-
-    /**
-     * update an event recurrence
-     */
-    else if ($requestMethod == Constants::RequestMethods['PUT']) {
-        $recurrenceData = $parser->getPutData();
-        $eventID = $parser->getEventID();
-
-        // be sure the event ID is set in the URI
-        if ($eventID == null) {
-            http_response_code(400);
-            exit;
-        }
-
-
-        $recurrencesModule->put($eventID, $recurrenceData);
+    } 
+    
+    else {
+        echo 'Invalid request method.';
+        http_response_code(400);
         exit;
     }
 }

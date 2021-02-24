@@ -120,14 +120,16 @@ class DB
             id, user_id, name, description, phone_number, 
             location_address_1, location_address_2, location_city, location_state, location_zip, 
             starts_on, ends_on, starts_at, ends_at, 
-            frequency, seperation, count, until
+            frequency, seperation, count, until,
+            recurrence_day, recurrence_week, recurrence_month
         )
 
         VALUES (
             :id, :user_id, :name, :description, :phone_number, 
             :location_address_1, :location_address_2, :location_city, :location_state, :location_zip, 
             :starts_on, :ends_on, :starts_at, :ends_at, 
-            :frequency, :seperation, :count, :until
+            :frequency, :seperation, :count, :until,
+            :recurrence_day, :recurrence_week, :recurrence_month
         )';
 
         $sql = DB::dbConnect()->prepare($stmt);
@@ -169,6 +171,13 @@ class DB
             $eventStruct->count = filter_var($eventStruct->count, FILTER_SANITIZE_NUMBER_INT);
         if ($eventStruct->until != null) 
             $eventStruct->until = filter_var($eventStruct->until, FILTER_SANITIZE_STRING);
+        if ($eventStruct->recurrence_day != null) 
+            $eventStruct->recurrence_day = filter_var($eventStruct->recurrence_day, FILTER_SANITIZE_NUMBER_INT);
+        if ($eventStruct->recurrence_week != null) 
+            $eventStruct->recurrence_week = filter_var($eventStruct->recurrence_week, FILTER_SANITIZE_NUMBER_INT);
+        if ($eventStruct->recurrence_month != null) 
+            $eventStruct->recurrence_month = filter_var($eventStruct->recurrence_month, FILTER_SANITIZE_NUMBER_INT);
+            
 
         
         // bind the parms 
@@ -190,53 +199,13 @@ class DB
         $sql->bindParam(':seperation', $eventStruct->seperation, PDO::PARAM_INT);
         $sql->bindParam(':count', $eventStruct->count, PDO::PARAM_INT);
         $sql->bindParam(':until', $eventStruct->until, PDO::PARAM_STR);
+        $sql->bindParam(':recurrence_day', $eventStruct->recurrence_day, PDO::PARAM_INT);
+        $sql->bindParam(':recurrence_week', $eventStruct->recurrence_week, PDO::PARAM_INT);
+        $sql->bindParam(':recurrence_month', $eventStruct->recurrence_month, PDO::PARAM_INT);
 
         $sql->execute();
 
         return $sql;
-    }
-
-    /********************************************************
-    Inserts a new event recurrence record into the database
-    *********************************************************/
-    public static function insertEventRecurrence(RecurrenceStruct $eventStruct) {
-
-        $stmt = 'INSERT INTO Event_Recurrences (id, event_id, day, week, month) 
-        VALUES (:recurrence_id, :event_id, :day, :week, :month)';
-        
-        $sql = DB::dbConnect()->prepare($stmt);
-
-        // recurrence and event ids cannot be null, so sanitize them
-        $event_id = filter_var($eventStruct->event_id, FILTER_SANITIZE_STRING);
-        $recurrence_id = filter_var($eventStruct->id, FILTER_SANITIZE_STRING);
-        
-        $day = $eventStruct->day;
-        if ($day != null) {
-            $day = filter_var($day, FILTER_SANITIZE_NUMBER_INT);
-        }
-
-        $week = $eventStruct->week;
-        if ($week != null) {
-            $week = filter_var($week, FILTER_SANITIZE_NUMBER_INT);
-        }
-
-        $month = $eventStruct->month;
-        if ($month != null) {
-            $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
-        }
-
-
-        // bind the parms
-        $sql->bindParam(':recurrence_id', $recurrence_id, PDO::PARAM_STR);
-        $sql->bindParam(':event_id', $event_id, PDO::PARAM_STR);
-        $sql->bindParam(':day', $day, PDO::PARAM_INT);
-        $sql->bindParam(':week', $week, PDO::PARAM_INT);
-        $sql->bindParam(':month', $month, PDO::PARAM_INT);
-
-
-        $sql->execute();
-        return $sql;
-
     }
 
 
@@ -322,21 +291,24 @@ class DB
     *********************************************************/
     public static function updateEvent($eventID, $eventData) {
         $stmt = 'UPDATE Events SET 
-              name               = :name,
-              description        = :description,
-              phone_number       = :phone_number,
-              location_address_1 = :location_address_1,
-              location_address_2 = :location_address_2,
-              location_city      = :location_city,
-              location_state     = :location_state,
-              location_zip       = :location_zip,
-              starts_on          = :starts_on,
-              ends_on            = :ends_on,
-              starts_at          = :starts_at,
-              ends_at            = :ends_at,
-              frequency          = :frequency,
-              seperation         = :seperation
-        WHERE id                 = :eventID';
+            name               = :name,
+            description        = :description,
+            phone_number       = :phone_number,
+            location_address_1 = :location_address_1,
+            location_address_2 = :location_address_2,
+            location_city      = :location_city,
+            location_state     = :location_state,
+            location_zip       = :location_zip,
+            starts_on          = :starts_on,
+            ends_on            = :ends_on,
+            starts_at          = :starts_at,
+            ends_at            = :ends_at,
+            frequency          = :frequency,
+            seperation         = :seperation,
+            recurrence_day     = :recurrence_day,
+            recurrence_week    = :recurrence_week,
+            recurrence_month   = :recurrence_month
+        WHERE id               = :eventID';
 
         $sql = DB::dbConnect()->prepare($stmt);
 
@@ -362,6 +334,9 @@ class DB
         $sql->bindParam(':ends_at', $eventData['ends_at'], PDO::PARAM_STR);
         $sql->bindParam(':frequency', $eventData['frequency'], PDO::PARAM_STR);
         $sql->bindParam(':seperation', $eventData['seperation'], PDO::PARAM_INT);
+        $sql->bindParam(':recurrence_day', $eventData['recurrence_day'], PDO::PARAM_INT);
+        $sql->bindParam(':recurrence_week', $eventData['recurrence_week'], PDO::PARAM_INT);
+        $sql->bindParam(':recurrence_month', $eventData['recurrence_month'], PDO::PARAM_INT);
 
         $sql->execute();
         return $sql;
