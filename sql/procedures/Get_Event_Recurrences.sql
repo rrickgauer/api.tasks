@@ -29,11 +29,10 @@ SP: BEGIN
     
     -- get all the event data from the Events table
 	SELECT 
-		e.starts_on, e.ends_on, e.seperation, e.frequency, er.day, er.week, er.month
+		e.starts_on, e.ends_on, e.seperation, e.frequency, e.recurrence_day, e.recurrence_week, e.recurrence_month
 	INTO event_starts_on , event_ends_on , event_seperation , event_frequency , event_recurrence_day, event_recurrence_week, event_recurrence_month 
 	FROM 
 		Events e
-		LEFT JOIN Event_Recurrences er ON e.id = er.event_id
 	WHERE
 		e.id = event_id;
     
@@ -58,8 +57,10 @@ SP: BEGIN
 		ELSE
 			SET first_date = GET_FIRST_MONTHWEEK_DATE(range_start, event_starts_on, event_seperation, event_recurrence_week, event_recurrence_day);
 		END IF;
-	ELSE -- YEARLY
+	ELSEIF event_frequency = 'YEARLY' THEN
 		SET first_date = GET_FIRST_YEARLY_DATE(range_start, event_starts_on, event_seperation, event_recurrence_month, event_recurrence_week, event_recurrence_day);
+	ELSE	-- ONCE
+		SET first_date = event_starts_on;
     END IF;
     
     -- set the next date to the first date
@@ -93,12 +94,14 @@ SP: BEGIN
             IF event_recurrence_week IS NOT NULL AND event_recurrence_day IS NOT NULL THEN
 				SET next_date = GET_NEXT_MONTHWEEK_DATE(next_date, event_recurrence_week, event_recurrence_day);
             END IF;
-		ELSE -- YEARLY
+		ELSEIF event_frequency = 'YEARLY' THEN
             SET next_date = DATE_ADD(next_date, INTERVAL event_seperation YEAR);
 			-- check if the recurrence is one that is a MONTHWEEK
             IF event_recurrence_week IS NOT NULL AND event_recurrence_day IS NOT NULL THEN
 				SET next_date = GET_NEXT_MONTHWEEK_DATE(next_date, event_recurrence_week, event_recurrence_day);
             END IF;
+		ELSE	-- once
+            SET next_date = DATE_ADD(event_ends_on, INTERVAL 1 YEAR);
 		END IF;
     END WHILE;
 	
@@ -108,7 +111,8 @@ SP: BEGIN
 		SELECT 
 			teod.event_id AS event_id, 
             e.name AS name,
-			teod.occurs_on AS occurs_on
+			teod.occurs_on AS occurs_on,
+            e.starts_at AS starts_at
 		FROM
 			Temp_Event_Occurrence_Dates teod
 			LEFT JOIN Events e ON teod.event_id = e.id

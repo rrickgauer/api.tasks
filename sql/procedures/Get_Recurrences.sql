@@ -54,7 +54,8 @@ BEGIN
     SELECT 
 		teod.event_id AS event_id, 
         e.name AS name,
-		teod.occurs_on AS occurs_on
+		teod.occurs_on AS occurs_on,
+        e.starts_at AS starts_at
 	FROM
 		Temp_Event_Occurrence_Dates teod
         LEFT JOIN Events e ON teod.event_id = e.id
