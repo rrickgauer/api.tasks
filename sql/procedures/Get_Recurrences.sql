@@ -12,7 +12,7 @@ BEGIN
     **************************************************************/
 	
     DECLARE finished INT DEFAULT 0;
-    DECLARE event_id CHAR(36);
+    DECLARE eventID CHAR(36);
     
     -- cursor for fetching all the event ids
 	DECLARE cursor_events CURSOR 
@@ -36,14 +36,14 @@ BEGIN
     -- for every event id, generate the event's occurrence dates
     LOOP_PROCESS_EVENTS: LOOP
 		-- get the next event_id
-        FETCH cursor_events INTO event_id;
+        FETCH cursor_events INTO eventID;
         
         -- if no more events exit the loop
         IF finished = 1 THEN
 			LEAVE LOOP_PROCESS_EVENTS;
 		END IF;
 		
-        CALL Get_Event_Recurrences(event_id, range_start, range_end, FALSE);
+        CALL Get_Event_Recurrences(eventID, range_start, range_end, FALSE);
     
     END LOOP LOOP_PROCESS_EVENTS;
     CLOSE cursor_events;
