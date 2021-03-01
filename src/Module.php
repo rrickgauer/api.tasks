@@ -261,6 +261,19 @@ class Completions extends Module
         return $dbResult;
     }
 
+    /********************************************************
+    Abstract implementation for POST
+    *********************************************************/
+    public function post($eventID = null, $date = null) {
+        $dbResult = DB::insertEventCompletion($eventID, $date);
+        
+        if ($dbResult->rowCount() == 1) {
+            parent::post();
+        } else {
+            Common::returnUnsuccessfulCreation();
+        }
+    }
+
 }
 
 

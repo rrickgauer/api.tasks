@@ -181,10 +181,8 @@ else if ($module == Constants::Modules['Completions']) {
     $userID = $parser->getUserId();
     $completetionsModule = new Completions($userID);
 
-
-
     /**
-     * Get the event recurrences between a set of dates
+     * Get completions
      */
     if ($requestMethod == Constants::RequestMethods['GET']) {
 
@@ -196,6 +194,36 @@ else if ($module == Constants::Modules['Completions']) {
 
         exit;
     } 
+
+    /**
+     * POST a completion
+     */
+    else if ($requestMethod == Constants::RequestMethods['POST']) {
+        $newEventID = $parser->getEventID();
+
+        // verify the event id is included in the uri and the date is set
+        if ($newEventID == null) {
+            $output = [
+                "message" => "missing the event_id in the URI",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        } else if ($_POST['date'] == null) {
+            $output = [
+                "message" => "missing the date field",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        }
+
+        // insert the date
+        $completetionsModule->post($newEventID, $_POST['date']);
+        exit;
+    }
     
     else {
         echo 'Invalid request method.';

@@ -472,6 +472,28 @@ class DB
     }
 
 
+    /********************************************************
+    Insert a new event completion
+    *********************************************************/
+    public static function insertEventCompletion($eventID, $date) {
+        $stmt = 
+        'INSERT INTO Event_Completions
+        (event_id, date) VALUES 
+        (:eventID, :date)';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $date = filter_var($date, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':date', $date, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
+    }
+
+
 }
 
 

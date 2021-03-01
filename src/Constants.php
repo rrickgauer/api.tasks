@@ -47,6 +47,10 @@ class Constants
         "recurrence_month"
     ];
 
+    const CompletionProperties = [
+        "date",
+    ];
+
 
 }
 
