@@ -532,7 +532,9 @@ class DB
         return $sql;
     }
 
-
+    /********************************************************
+    Delete an event completion
+    *********************************************************/
     public static function deleteEventCompletion($eventID, $date) {
         $stmt = 
         'DELETE FROM Event_Completions

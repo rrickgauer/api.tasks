@@ -250,7 +250,7 @@ else if ($module == Constants::Modules['Completions']) {
             exit;
         }
 
-        // insert the date
+        // iremove the completion
         $completetionsModule->delete($eventID, $date);
         exit;
     }

@@ -285,6 +285,9 @@ class Completions extends Module
         }
     }
 
+    /********************************************************
+    Abstract implementation for DELETE
+    *********************************************************/
     public function delete($eventID = null, $date = null) {
         $dbResult = DB::deleteEventCompletion($eventID, $date);
         
