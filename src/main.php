@@ -198,6 +198,7 @@ else if ($module == Constants::Modules['Completions']) {
      */
     else if ($requestMethod == Constants::RequestMethods['POST']) {
         $newEventID = $parser->getEventID();
+        $date = $parser->getRequestedDate();
 
         // verify the event id is included in the uri and the date is set
         if ($newEventID == null) {
@@ -208,9 +209,9 @@ else if ($module == Constants::Modules['Completions']) {
             Common::printJson($output);
             Common::returnUnsuccessfulCreation();
             exit;
-        } else if ($_POST['date'] == null) {
+        } else if ($date == null) {
             $output = [
-                "message" => "missing the date field",
+                "message" => "missing the date in the URI",
             ];
 
             Common::printJson($output);
@@ -219,7 +220,7 @@ else if ($module == Constants::Modules['Completions']) {
         }
 
         // insert the date
-        $completetionsModule->post($newEventID, $_POST['date']);
+        $completetionsModule->post($newEventID, $date);
         exit;
     }
 
