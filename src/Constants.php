@@ -22,7 +22,7 @@ class Constants
         "Events"        => "events",
         "Recurrences"   => "recurrences",
         "Cancellations" => "cancellations",
-        "Completetions" => "completetions",
+        "Completions"   => "completions",
         "Notes"         => "notes",
     ];
 
@@ -45,6 +45,10 @@ class Constants
         "recurrence_day",
         "recurrence_week",
         "recurrence_month"
+    ];
+
+    const CompletionProperties = [
+        "date",
     ];
 
 

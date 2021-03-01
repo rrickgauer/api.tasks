@@ -37,6 +37,7 @@ class Parser
         $this->setRequestMethod();
         $this->setUserId();
         $this->setEventID();
+        $this->setRequestedDate();
     }
 
 
@@ -173,6 +174,10 @@ class Parser
         }
 
         $this->requestedDate = $requestedDate;
+    }
+
+    public function getRequestedDate() {
+        return $this->requestedDate;
     }
 }
 

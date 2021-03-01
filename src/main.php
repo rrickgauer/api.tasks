@@ -173,6 +173,95 @@ else if ($module == Constants::Modules['Recurrences']) {
     }
 }
 
+/***************************************************************************
+Completions section.
+****************************************************************************/
+else if ($module == Constants::Modules['Completions']) {
+    $parser = new Parser();
+    $userID = $parser->getUserId();
+    $completetionsModule = new Completions($userID);
+
+    /**
+     * Get completions
+     */
+    if ($requestMethod == Constants::RequestMethods['GET']) {
+        $eventID = $parser->getEventID();
+        $date = $parser->getRequestedDate();
+
+        $completetionsModule->get($eventID, $date);
+
+        exit;
+    } 
+
+    /**
+     * POST a completion
+     */
+    else if ($requestMethod == Constants::RequestMethods['POST']) {
+        $newEventID = $parser->getEventID();
+
+        // verify the event id is included in the uri and the date is set
+        if ($newEventID == null) {
+            $output = [
+                "message" => "missing the event_id in the URI",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        } else if ($_POST['date'] == null) {
+            $output = [
+                "message" => "missing the date field",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        }
+
+        // insert the date
+        $completetionsModule->post($newEventID, $_POST['date']);
+        exit;
+    }
+
+
+    /**
+     * POST a completion
+     */
+    else if ($requestMethod == Constants::RequestMethods['DELETE']) {
+        $eventID = $parser->getEventID();
+        $date = $parser->getRequestedDate();
+
+        // verify the event id is included in the uri and the date is set
+        if ($eventID == null) {
+            $output = [
+                "message" => "missing the event_id in the URI",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        } else if ($date == null) {
+            $output = [
+                "message" => "missing the date field",
+            ];
+
+            Common::printJson($output);
+            Common::returnUnsuccessfulCreation();
+            exit;
+        }
+
+        // iremove the completion
+        $completetionsModule->delete($eventID, $date);
+        exit;
+    }
+
+    else {
+        echo 'Invalid request method.';
+        http_response_code(400);
+        exit;
+    }
+}
+
 
 exit;
 

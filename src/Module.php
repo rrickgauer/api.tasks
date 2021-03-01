@@ -226,6 +226,77 @@ class Recurrences extends Module
         $eventData = DB::getEventRecurrences($eventID, $startsOn, $endsOn)->fetchAll(PDO::FETCH_ASSOC);
         return $eventData;
     }
+}
+
+
+class Completions extends Module
+{
+
+    /********************************************************
+    Abstract implementation for GET
+    *********************************************************/
+    public function get($eventID = NULL, $date = NULL) {
+
+        if ($eventID == null && $date == null) {
+            $this->data = $this->getCompletions();
+        } else  if ($eventID != null && $date == null) {
+            $this->data = $this->getEventCompletions($eventID);
+        } else if ($eventID != null && $date != null) {
+            $this->data = $this->getEventCompletion($eventID, $date);
+        }
+
+        parent::get();
+    }
+
+    /********************************************************
+    Retrieve all the event completions for a user
+    *********************************************************/
+    protected function getCompletions() {
+        $dbResult = DB::getCompletions($this->userID)->fetchAll(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
+
+    /********************************************************
+    Retrieve all the event completions for a single event
+    *********************************************************/
+    protected function getEventCompletions($eventID) {
+        $dbResult = DB::getEventCompletions($eventID)->fetchAll(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
+
+    /********************************************************
+    Retrieve all the event completions for a single event
+    *********************************************************/
+    protected function getEventCompletion($eventID, $date) {
+        $dbResult = DB::getEventCompletions($eventID, $date)->fetch(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
+
+    /********************************************************
+    Abstract implementation for POST
+    *********************************************************/
+    public function post($eventID = null, $date = null) {
+        $dbResult = DB::insertEventCompletion($eventID, $date);
+        
+        if ($dbResult->rowCount() == 1) {
+            parent::post();
+        } else {
+            Common::returnUnsuccessfulCreation();
+        }
+    }
+
+    /********************************************************
+    Abstract implementation for DELETE
+    *********************************************************/
+    public function delete($eventID = null, $date = null) {
+        $dbResult = DB::deleteEventCompletion($eventID, $date);
+        
+        if ($dbResult->rowCount() == 1) {
+            http_response_code(204);
+        } else {
+            Common::returnRequestNotFound();
+        }
+    }
 
 }
 
