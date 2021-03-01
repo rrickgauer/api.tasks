@@ -253,6 +253,14 @@ class Completions extends Module
         return $dbResult;
     }
 
+    /********************************************************
+    Retrieve all the event completions for a single event
+    *********************************************************/
+    protected function getEventCompletions($eventID) {
+        $dbResult = DB::getEventCompletions($eventID)->fetchAll(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
+
 }
 
 

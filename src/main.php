@@ -181,6 +181,8 @@ else if ($module == Constants::Modules['Completions']) {
     $userID = $parser->getUserId();
     $completetionsModule = new Completions($userID);
 
+
+
     /**
      * Get the event recurrences between a set of dates
      */
@@ -189,7 +191,7 @@ else if ($module == Constants::Modules['Completions']) {
         if (!$parser->isEventIDSet()) {
             $completetionsModule->get();
         } else {
-            // $completetionsModule->get($startsOn, $endsOn, $parser->getEventID());
+            $completetionsModule->get($parser->getEventID());
         }
 
         exit;

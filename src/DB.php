@@ -437,6 +437,40 @@ class DB
         return $sql;
     }
 
+    /********************************************************
+    Retrieve all the event completions for a single event
+
+    Returns:
+        event_id
+        name
+        date
+        marked_completed
+    *********************************************************/
+    public static function getEventCompletions(string $eventID) {
+        $stmt = 
+        'SELECT 
+            c.event_id as event_id,
+            e.name as name,
+            c.date as date,
+            c.marked_completed as marked_completed
+        FROM
+            Event_Completions c
+                LEFT JOIN Events e ON c.event_id = e.id
+        WHERE 
+	        c.event_id = :eventID
+        ORDER BY 
+            date DESC, 
+            name ASC';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
+    }
+
 
 }
 
