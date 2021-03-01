@@ -173,6 +173,35 @@ else if ($module == Constants::Modules['Recurrences']) {
     }
 }
 
+/***************************************************************************
+Completions section.
+****************************************************************************/
+else if ($module == Constants::Modules['Completions']) {
+    $parser = new Parser();
+    $userID = $parser->getUserId();
+    $completetionsModule = new Completions($userID);
+
+    /**
+     * Get the event recurrences between a set of dates
+     */
+    if ($requestMethod == Constants::RequestMethods['GET']) {
+
+        if (!$parser->isEventIDSet()) {
+            $completetionsModule->get();
+        } else {
+            // $completetionsModule->get($startsOn, $endsOn, $parser->getEventID());
+        }
+
+        exit;
+    } 
+    
+    else {
+        echo 'Invalid request method.';
+        http_response_code(400);
+        exit;
+    }
+}
+
 
 exit;
 

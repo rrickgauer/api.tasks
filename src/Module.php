@@ -226,6 +226,32 @@ class Recurrences extends Module
         $eventData = DB::getEventRecurrences($eventID, $startsOn, $endsOn)->fetchAll(PDO::FETCH_ASSOC);
         return $eventData;
     }
+}
+
+
+class Completions extends Module
+{
+
+    /********************************************************
+    Abstract implementation for GET
+    *********************************************************/
+    public function get($eventID = NULL) {
+        if ($eventID == NULL) {
+            $this->data = $this->getCompletions();
+        } else {
+            $this->data = $this->getEventCompletions($eventID);
+        }
+
+        parent::get();
+    }
+
+    /********************************************************
+    Retrieve all the event completions for a user
+    *********************************************************/
+    protected function getCompletions() {
+        $dbResult = DB::getCompletions($this->userID)->fetchAll(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
 
 }
 

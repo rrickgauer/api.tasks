@@ -22,7 +22,7 @@ class Constants
         "Events"        => "events",
         "Recurrences"   => "recurrences",
         "Cancellations" => "cancellations",
-        "Completetions" => "completetions",
+        "Completions"   => "completions",
         "Notes"         => "notes",
     ];
 

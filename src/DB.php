@@ -364,7 +364,6 @@ class DB
     update a recurrence
     *********************************************************/
     public static function updateRecurrence($eventID, $recurrenceData) {
-
         $stmt = 'UPDATE Event_Recurrences SET
               day      = :day,
               week     = :week,
@@ -402,6 +401,40 @@ class DB
         $sql->execute();
         return $sql;
 
+    }
+
+    /********************************************************
+    Retrieve all the event completions for a user
+
+    Returns:
+        event_id
+        name
+        date
+        marked_completed
+    *********************************************************/
+    public static function getCompletions(string $userID) {
+        $stmt = 
+        'SELECT 
+            c.event_id as event_id,
+            e.name as name,
+            c.date as date,
+            c.marked_completed as marked_completed
+        FROM
+            Event_Completions c
+                LEFT JOIN Events e ON c.event_id = e.id
+        WHERE 
+	        event_id in (select e2.id from Events e2 where e2.user_id = :userID)
+        ORDER BY 
+            date DESC, 
+            name ASC';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':userID', $userID, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
     }
 
 
