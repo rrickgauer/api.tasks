@@ -471,6 +471,45 @@ class DB
         return $sql;
     }
 
+    /********************************************************
+    Retrieve a single event completion on a specified date
+
+    Returns:
+        event_id
+        name
+        date
+        marked_completed
+    *********************************************************/
+    public static function getEventCompletion($eventID, $date) {
+        $stmt = 
+        'SELECT 
+            c.event_id as event_id,
+            e.name as name,
+            c.date as date,
+            c.marked_completed as marked_completed
+        FROM
+            Event_Completions c
+                LEFT JOIN Events e ON c.event_id = e.id
+        WHERE 
+	        c.event_id = :eventID
+            AND c.date = :date
+        ORDER BY 
+            date DESC, 
+            name ASC';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $date = filter_var($date, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':date', $date, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
+    }
+
+
 
     /********************************************************
     Insert a new event completion
@@ -480,6 +519,25 @@ class DB
         'INSERT INTO Event_Completions
         (event_id, date) VALUES 
         (:eventID, :date)';
+
+        $sql = DB::dbConnect()->prepare($stmt);
+
+        $eventID = filter_var($eventID, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':eventID', $eventID, PDO::PARAM_STR);
+
+        $date = filter_var($date, FILTER_SANITIZE_STRING);
+        $sql->bindParam(':date', $date, PDO::PARAM_STR);
+
+        $sql->execute();
+        return $sql;
+    }
+
+
+    public static function deleteEventCompletion($eventID, $date) {
+        $stmt = 
+        'DELETE FROM Event_Completions
+        WHERE event_id = :eventID
+        AND date = :date';
 
         $sql = DB::dbConnect()->prepare($stmt);
 

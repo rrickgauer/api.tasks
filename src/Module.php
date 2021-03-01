@@ -235,11 +235,14 @@ class Completions extends Module
     /********************************************************
     Abstract implementation for GET
     *********************************************************/
-    public function get($eventID = NULL) {
-        if ($eventID == NULL) {
+    public function get($eventID = NULL, $date = NULL) {
+
+        if ($eventID == null && $date == null) {
             $this->data = $this->getCompletions();
-        } else {
+        } else  if ($eventID != null && $date == null) {
             $this->data = $this->getEventCompletions($eventID);
+        } else if ($eventID != null && $date != null) {
+            $this->data = $this->getEventCompletion($eventID, $date);
         }
 
         parent::get();
@@ -262,6 +265,14 @@ class Completions extends Module
     }
 
     /********************************************************
+    Retrieve all the event completions for a single event
+    *********************************************************/
+    protected function getEventCompletion($eventID, $date) {
+        $dbResult = DB::getEventCompletions($eventID, $date)->fetch(PDO::FETCH_ASSOC);
+        return $dbResult;
+    }
+
+    /********************************************************
     Abstract implementation for POST
     *********************************************************/
     public function post($eventID = null, $date = null) {
@@ -271,6 +282,16 @@ class Completions extends Module
             parent::post();
         } else {
             Common::returnUnsuccessfulCreation();
+        }
+    }
+
+    public function delete($eventID = null, $date = null) {
+        $dbResult = DB::deleteEventCompletion($eventID, $date);
+        
+        if ($dbResult->rowCount() == 1) {
+            http_response_code(204);
+        } else {
+            Common::returnRequestNotFound();
         }
     }
 
