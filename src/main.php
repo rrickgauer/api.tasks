@@ -187,7 +187,7 @@ else if ($module == Constants::Modules['Completions']) {
     if ($requestMethod == Constants::RequestMethods['GET']) {
         $eventID = $parser->getEventID();
         $date = $parser->getRequestedDate();
-        
+
         $completetionsModule->get($eventID, $date);
 
         exit;
@@ -228,16 +228,11 @@ else if ($module == Constants::Modules['Completions']) {
      * POST a completion
      */
     else if ($requestMethod == Constants::RequestMethods['DELETE']) {
-        $newEventID = $parser->getEventID();
-        $put = $parser->getPutData();
-
-        // parse_str(file_get_contents("php://input"), $_PUT);
-
-        Common::printJson($put);
-        exit;
+        $eventID = $parser->getEventID();
+        $date = $parser->getRequestedDate();
 
         // verify the event id is included in the uri and the date is set
-        if ($newEventID == null) {
+        if ($eventID == null) {
             $output = [
                 "message" => "missing the event_id in the URI",
             ];
@@ -245,7 +240,7 @@ else if ($module == Constants::Modules['Completions']) {
             Common::printJson($output);
             Common::returnUnsuccessfulCreation();
             exit;
-        } else if ($_PUT['date'] == null) {
+        } else if ($date == null) {
             $output = [
                 "message" => "missing the date field",
             ];
@@ -256,11 +251,9 @@ else if ($module == Constants::Modules['Completions']) {
         }
 
         // insert the date
-        $completetionsModule->delete($newEventID, $_PUT['date']);
+        $completetionsModule->delete($eventID, $date);
         exit;
     }
-    
-
 
     else {
         echo 'Invalid request method.';
