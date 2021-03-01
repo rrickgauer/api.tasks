@@ -112,6 +112,7 @@ else if ($module == Constants::Modules['Events']) {
      */
     else if ($requestMethod == Constants::RequestMethods['POST']) {
         $eventStruct = new EventStruct($parser->getNewEventRequestData());
+        $eventStruct->id = $parser->getEventID();
         $eventsModule->post($eventStruct);
 
         exit;
