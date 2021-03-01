@@ -28,7 +28,6 @@ class Constants
 
     // properties for an event
     const EventProperties = [
-        "id",
         "name",
         "description",
         "phone_number",

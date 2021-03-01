@@ -117,7 +117,6 @@ class Events extends Module
     *********************************************************/
     public function put($eventID, $resourceBody) {
         $requiredEventFields = Constants::EventProperties;
-        unset($requiredEventFields[0]);     // remove the id field 
 
         // get arrays of each of the keys
         $requiredEventFields = array_values($requiredEventFields);
